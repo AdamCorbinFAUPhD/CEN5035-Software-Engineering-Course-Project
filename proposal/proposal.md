@@ -13,7 +13,7 @@ urlcolor: blue
 header-includes: |
     \usepackage{fancyhdr}
     \pagestyle{fancy}
-    \lfoot{Draft Prepared: 15 August 2018}
+    \lfoot{Draft Prepared: 12 September 2019}
     \rfoot{Page \thepage}
 ---
 
