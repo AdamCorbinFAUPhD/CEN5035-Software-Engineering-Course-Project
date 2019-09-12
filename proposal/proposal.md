@@ -36,7 +36,7 @@ header-includes: |
 # Check list
 For each item below you must answer with only one of the following: DONE, ON TRACK (meaning it will be done on time, and no issues perceived) or ISSUE (you 
 have some problems, and then define what is the problem with 1-3 lines)
-a) Team decided on basic means of communications
-b) Team found a time slot to meet outside of the class
-c) Skills of each team member defined and known to all
-d) Team lead ensured that all team members read the final Project 1 and agree/understand it before submission
+1. Team decided on basic means of communications
+2. Team found a time slot to meet outside of the class
+3. Skills of each team member defined and known to all
+4. Team lead ensured that all team members read the final Project 1 and agree/understand it before submission
