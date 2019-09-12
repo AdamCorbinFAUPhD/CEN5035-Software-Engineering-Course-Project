@@ -32,6 +32,7 @@ header-includes: |
 2. Malia Kency
 3. Stincii Dumerjean
 4. Jared Peterson
+
 # Check list
 For each item below you must answer with only one of the following: DONE, ON TRACK (meaning it will be done on time, and no issues perceived) or ISSUE (you 
 have some problems, and then define what is the problem with 1-3 lines)
