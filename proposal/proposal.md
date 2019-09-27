@@ -34,13 +34,13 @@ header-includes: |
 # Executive Summary
 Our group project during the Fall 2019 semester in CEN 5035 Software Engineering will be a Smart Security System. We have found there is a lack of flexibility to set up schedules for a security system which lead us down this path. We are looking to solve this problem by having an easily configurable way to schedule when the alarm should be enabled or disabled. This system will also have the standard features of a typical alarm system.
 
-The Smart Security System breaks away from the competition by it will have the ability to connect up with the owner&#39;s digital calendar to automatically create a detection schedule.This system will also have voice controlled activation and when the system has been triggered it can be disarmed using an Alexa or Google home device,a modifiable monitoring schedule,or disarm the alarm system when triggered where the owner is present. To reduce the risk of this failing, the system will also have a backup keypad to enable or disable the detection system in the event that voice was not sufficient.
+The Smart Security System breaks away from the competition in its  ability to connect to and utilize with the owner’s digital calendar to automatically create a detection schedule.This system will also have voice controlled activation which can be used to arm and disarm the system through an Alexa or Google home device. To reduce the risk of  failure, the system will also have a backup keypad to enable or disable the detection system in the event that voice was not sufficient.
 
-This security system will  include the cutting edge Passive Infrared motion sensing technology to be able to detect any movement in the desired location. To ward off intruders alarm warning system that will announce that a breakin has been detected and the authorities have been notified. For added security, the system will capture images, video and audio to relay back to the system owner and or authorities should a break-in occur. The system will also have the ability to confirm if an event was real or not using SMS text and/or phone call notifications. The owner will have a short time frame to disregard the event or the authorities will be notified.
+The security system will include cutting edge passive infrared motion sensing technology to be able to detect any movement in the desired location. The alarm warning system will announce that a break in has been detected and the authorities have been notified to ward off intruders. For added security, the system will capture images, video and audio to relay back to the system owner and or authorities should a break-in occur. The system will also have the ability to confirm if an event was real or not using SMS text and/or phone call notifications. Giving the owner a short time frame to disregard the event before the authorities are notified.
 
-Finally the system will have a password secured web interface to be able to view and update the monitoring schedule. The web system will provide the user the ability to activate or disarm the alarm and view a live stream of their camera at any given time.
+Finally the system will have a password secured web interface to be able to view and update the monitoring schedule. The web system will provide the user the ability to activate or disarm the alarm and view a live stream of their camera at any given time. 
 
-Our target audience will be for anyone who wants to have a security system that has a busy schedule where they might be traveling often. This will help ensure that the alarm system will always be active when the home owner is away.
+Our target audience will be for anyone who wants to have a security system that has a busy schedule where they might be traveling often. This will help ensure that the alarm system will always be active when the home owner is away. 
 \newpage{}
 
 # Competitive Analysis
@@ -50,11 +50,16 @@ Our target audience will be for anyone who wants to have a security system that 
 | **24/7 Monitoring** | X | X | X | X | X | X |
 | **Live Alerts** | X | X | X | X | X | X |
 | **Motion Detection** | X | X | X | X | X | X |
-| **Voice Control** | 0 | X | X | X | X | X |
+| **Voice Control** | O | X | X | X | X | X |
 | **Arm/Disarm Remotely** | X | X | X | X | X | X |
-| Schedule sync | 0 | 0 | 0 | X | 0 | X |
+| **Schedule sync** | O | O | O | X | O | X |
 
-An advantage that our Smart Security System is that the system will be able to connect up with the owner's digital schedule. There is only one other system that has that capability, FrontPoint. The advantage our system has over FrontPoint, along with the other systems, is the ability to receive these alerts quick enough in order to determine whether the alert was real or not. Our system will be able to notify authorities quickly enough after confirmation.
+|Symboal| Meaning|
+|---|---|
+|X |Includes|
+|O |Excludes |
+
+An advantage that our Smart Security System is that the system will be able to connect up with the owner’s digital schedule. There is only one other system that has that capability, FrontPoint. The advantage our system has over FrontPoint, along with the other systems, is the ability to receive these alerts quick enough in order to determine whether the alert was real or not. Our system will be able to notify authorities quickly enough after confirmation. 
 
 # Data Definition
 - Enable/arm - Turning the system on to monitor for intruders
@@ -107,8 +112,7 @@ An advantage that our Smart Security System is that the system will be able to c
 1. System Owner chooses to disable monitoring service
 2. System asks for code to disarm monitoring service
    * Code provided is incorrect, system allows for another try
-   * Code provided is incorrect, system is locked
-3. System Owner mustverify identity to unlock system
+   * Code provided is incorrect, system is locked for 10 minutes
 
 ** **
 
@@ -118,24 +122,12 @@ An advantage that our Smart Security System is that the system will be able to c
 
 **Basic Flow** :
 
-4. System owner is notified of possible disturbance
-5. A video/picture is sent to system owner
+1. System owner is notified of possible disturbance
+2. A video/picture is sent to system owner
    * If disturbance occurs outside of normal range
       i.  System owner can choose to dispatch authorities
       ii.  Or system owner can choose to disable alarm
-6. System owner chooses to disable monitoring service
-7. System asks for code to disarm monitoring service
-   * System verifies that system owner would like to disarm monitoring service
-   * Once verified, system disarms monitoring service
-8. System Owner is notified that monitoring service has been disarmed on user interface
-
-**Alternate Flow** :
-
-9. System Owner chooses to disable monitoring service
-10. System asks for code to disarm monitoring service
-    * Code provided is incorrect, system allows for another try
-    * Code provided is incorrect, system is locked, authorities are dispatched
-11. System Owner must verify identity to unlock system
+3. See **Use Case Disable Alarm**
 
 ** **
 
