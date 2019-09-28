@@ -16,7 +16,7 @@ urlcolor: blue
 header-includes: |
     \usepackage{fancyhdr}
     \pagestyle{fancy}
-    \lfoot{Draft Prepared: 26 September 2019}
+    \lfoot{27 September 2019}
     \rfoot{Page \thepage}
 ---
 
@@ -195,4 +195,4 @@ have some problems, and then define what is the problem with 1-3 lines)
 1. Team decided on basic means of communications. DONE - Using Slack
 2. Team found a time slot to meet outside of class - On Track - Checking the Slack channel every 24-48h to stay up to date with the team
 3. Skills of each team member defined and known to all. DONE - We had introductions on the skill set
-4. Team lead ensured that all team members read the final Project 1 and agree/understand it before submission
+4. Team lead ensured that all team members read the final Project 1 and agree/understand it before submission - DONE
