@@ -3,8 +3,10 @@ import RPi.GPIO as GPIO
 # This class is intended to control the RGB led
 class LED:
     def __init__(self):
+        # Initilizing the GPIO Mode to Brodcom board pins which is what the T_Extention uses
         GPIO.setmode(GPIO.BCM)
 
+        # LED control pins
         self._LED_R = 16
         self._LED_G = 20
         self._LED_B = 21
