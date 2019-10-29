@@ -1,5 +1,8 @@
 import logging
 from threading import Thread
+import socket
+from sys import exit
+import json
 
 
 class System:
@@ -18,16 +21,20 @@ class System:
         self._threads = []
         # Setup logging for this module.
         self._logger = logging.getLogger('AlarmSystem')
-        fh = logging.FileHandler('as.log')
-        fh.setLevel(logging.DEBUG)
         ch = logging.StreamHandler()
         ch.setLevel(logging.DEBUG)
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(threadName)s - %(levelname)s - %(message)s')
-        fh.setFormatter(formatter)
         ch.setFormatter(formatter)
-        self._logger.addHandler(fh)
         self._logger.addHandler(ch)
         self._logger.setLevel(logging.DEBUG)
+        # setting up tcp socket to receive
+        self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self._socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        try:
+            self._socket.bind(('127.0.0.1', 9090))
+        except socket.error as e:
+            self._logger.fatal('{}'.format(e))
+            exit(1)
         # TODO: initialize sensor classes
 
     def run(self):
@@ -59,13 +66,28 @@ class System:
         self._logger.debug('starting main thread')
         try:
             while self._running:
-                # TODO: check for input
-                pass
+                # accept connections
+                connection = self._socket.accept()
+                if connection is not None:
+                    self._logger.info("Received connection")
+                    # create new thread an pass it the connection
+                    t = Thread(target=self._connection_thread, args=(connection[0],))
+                    self._threads.append(t)
+                    t.start()
+        except socket.error as e:
+            self._logger.error('{}'.format(e))
         except KeyboardInterrupt as e:
             self._logger.info('{}'.format(e))
         finally:
             self._running = False
             self._join_threads()
+
+    def _connection_thread(self, connection):
+        try:
+            data = json.loads(bytearray(connection[0].recv()).decode('utf-8'))
+            # TODO: process request and send response
+        except socket.error as e:
+            self._logger.error('{}'.format(e))
 
     def _join_threads(self):
         self._logger.debug('joining threads...')
