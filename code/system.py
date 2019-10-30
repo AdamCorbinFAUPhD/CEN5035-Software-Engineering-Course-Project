@@ -4,7 +4,6 @@ import socket
 from sys import exit
 import json
 
-
 class System:
     # __init__ is the class constructor and is also where you must define your instance variables
     def __init__(self, pin: str = '123456'):
@@ -20,7 +19,7 @@ class System:
         # list to keep track of worker threads
         self._threads = []
         # Setup logging for this module.
-        self._logger = logging.getLogger('AlarmSystem')
+        self._logger = logging.getLogger('Alarm System')
         ch = logging.StreamHandler()
         ch.setLevel(logging.DEBUG)
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(threadName)s - %(levelname)s - %(message)s')
@@ -40,7 +39,6 @@ class System:
     def run(self):
         """
         System checks sensors if armed and looks for inputs.
-        :return:
         """
         if not self._running:
             self._running = True
@@ -67,6 +65,7 @@ class System:
         try:
             while self._running:
                 # accept connections
+                self._socket.listen(5)
                 connection = self._socket.accept()
                 if connection is not None:
                     self._logger.info("Received connection")
@@ -82,14 +81,37 @@ class System:
             self._running = False
             self._join_threads()
 
-    def _connection_thread(self, connection):
+    def _connection_thread(self, connection: socket.socket):
+        """
+        Process a connection
+        :param connection: The socket connection to utilize
+        """
         try:
-            data = json.loads(bytearray(connection[0].recv()).decode('utf-8'))
-            # TODO: process request and send response
+            data = json.loads(bytearray(connection.recv(1024)).decode('utf-8'))
+            if data is not None and isinstance(data, dict) and 'func' in data:
+                func = data['func']
+                if func == 'arm' and 'pin' in data and isinstance(data['pin'], str):
+                    result = self._arm(data['pin'])
+                    connection.send(json.dumps({'result': result}).encode('utf-8'))
+                elif func == 'disarm' and 'pin' in data and isinstance(data['pin'], str):
+                    result = self._disarm(data['pin'])
+                    connection.send(json.dumps({'result': result}).encode('utf-8'))
+                elif func == 'set_pin' and 'current_pin' in data and isinstance(data['current_pin'], str) \
+                        and 'new_pin' in data and isinstance(data['new_pin'], str):
+                    result = self._set_pin(data['current_pin'], data['new_pin'])
+                    connection.send(json.dumps({'result': result}).encode('utf-8'))
+                # TODO: other functions including photo stuff.
         except socket.error as e:
             self._logger.error('{}'.format(e))
+        except json.JSONDecodeError as e:
+            self._logger.error('{}'.format(e))
+        finally:
+            connection.close()
 
     def _join_threads(self):
+        """
+        Joins all active threads before the program exits
+        """
         self._logger.debug('joining threads...')
         for t in self._threads:
             t.join()
@@ -102,8 +124,12 @@ class System:
         :param pin: the system pin
         """
         if not self._armed and self._check_pin(pin):
+            self._logger.info('System is now armed')
             self._armed = True
             # TODO: device arming functions
+            return True
+        self._logger.info('Failed to arm system')
+        return False
 
     def _disarm(self, pin: str):
         """
@@ -112,8 +138,12 @@ class System:
         :return:
         """
         if self._armed and self._check_pin(pin):
+            self._logger.info('System is now disarmed')
             self._armed = False
             # TODO: device disarm functions
+            return True
+        self._logger.info('Failed to disarmed system')
+        return False
 
     def _set_pin(self, current_pin: str, new_pin: str):
         """
@@ -127,7 +157,9 @@ class System:
             # check to see if the new pin is a length of 6 and if it only contains numbers
             if len(new_pin) == 6 and new_pin.isnumeric():
                 self._pin = new_pin
+                self._logger.info('System pin set')
                 return True
+        self._logger.info('Failed to set system pin')
         return False
 
     def _check_pin(self, pin: str):
@@ -139,6 +171,13 @@ class System:
         if self._pin == pin:
             return True
         return False
+
+    def is_armed(self):
+        """
+        Returns the armed status of the system.
+        :return: armed
+        """
+        return self._armed
 
 
 # when this .py is called we will create a system object and run it.
