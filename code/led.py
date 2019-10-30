@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
 
+
 # This class is intended to control the RGB led
 class LED:
     def __init__(self):
@@ -31,6 +32,3 @@ class LED:
         
     def blue_off(self):
         GPIO.output(self._LED_B, False)   
-        
-
-    
