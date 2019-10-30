@@ -7,6 +7,8 @@ import RPi.GPIO as GPIO
 # 3. While checking for an individual key has been pressed, 1 at a time the output will be set to Low.
 # 4. While the 1 output is set to low, we will check if any of the inputs as set to Low, this will indicate that a button as been pressed
 # 5. In order to avoid sending multiple keypress events while the button is held down, the system will wait till that Low becomes high again
+
+# Reference: Used this YouTube video on how to connect up the keypad: https://www.youtube.com/watch?v=yYnX5QodqQ4
 class Keypad:
     def __init__(self):
         # Initilizing the GPIO Mode to Brodcom board pins which is what the T_Extention uses
