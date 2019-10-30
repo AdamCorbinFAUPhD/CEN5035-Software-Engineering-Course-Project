@@ -8,7 +8,7 @@ class PIR_Sensor:
         GPIO.setup(self.PIR_PIN, GPIO.OUT)
     
     # This will return True if the PIR has been triggered and False when no motion
-    def read():
-        return GPIO.input(PIR_PIN)
+    def read(self):
+        return GPIO.input(self.PIR_PIN)
         
     # TODO_AC - Consider looking into GPIO.add_event_detect callback instead of polling
