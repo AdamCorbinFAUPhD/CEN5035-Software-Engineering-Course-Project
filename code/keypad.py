@@ -21,6 +21,7 @@ The Keypad creates its own thread to capture all the key presses and then sends 
 The intention would be there is a separate thread that would process the keys using the queue
 """
 
+
 # Reference: Used this YouTube video on how to connect up the keypad: https://www.youtube.com/watch?v=yYnX5QodqQ4
 class Keypad:
     """
@@ -40,11 +41,11 @@ class Keypad:
     keypress_queue: Queue
         Pass in the key that was pressed in the queue to be processed by a separate thread
     """
+
     def __init__(self):
         """
-
-        :type
-        :param queue: Pass in the key that was pressed in the queue to be processed by a separate thread
+        Initialization of the Keypad object. The only consideration is to make sure the thread is not started before
+            the gpio pins are initialized.
         """
 
         # Initializing the GPIO Mode to Brodcom board pins which is what the T_Extension uses
@@ -61,12 +62,10 @@ class Keypad:
                         ['*', '0', '#', 'D']]
 
         for col in self._column_pins:
-            print("col:", col)
             GPIO.setup(col, GPIO.OUT)
             GPIO.output(col, 1)
 
         for row in self._row_pins:
-            print("row:", row)
             GPIO.setup(row, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
         # Start monitoring for key presses
@@ -89,4 +88,3 @@ class Keypad:
                         # add the key that was pressed into the queue
                         self.keypress_queue.put(self._matrix[i][j])
                 GPIO.output(self._column_pins[j], 1)
-
