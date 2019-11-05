@@ -19,11 +19,11 @@ class LED:
 
     Attributes
     ----------
-    _LED_R: bool
+    _LED_R: int
         The pin to control the red LED
-    _LED_G: bool
+    _LED_G: int
         The pin to control the green LED
-    _LED_B: bool
+    _LED_B: int
         The pin to control the blue LED
     """
     def __init__(self):
