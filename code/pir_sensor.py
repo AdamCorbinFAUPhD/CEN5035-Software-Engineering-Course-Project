@@ -5,13 +5,50 @@ import time
 import RPi.GPIO as GPIO
 
 """
+# PIR Sensor
 The PIR Sensor will be use to detect movement within a room. For this project we will be using the HC-SR501 PIR Motion
-Sensor. This sensor has 2 a few different options.  
-TODO - go into the tech details on what a PIR sensor is and how it works. 
-TODO - talk about how the sensor takes ~1min to stabilize before a trigger can happen
-TODO - Talk about re-triggering
-TODO - talk about initial testing of the PIR
-TODO - Talk about the different modules that be be added to this module( temp sensor and ambient sensor) and how they can be used
+Sensor. PIR stands for Passive Infra-red which means it doesnt use any energy to detect signals
+The PIR sensor consist of a main compost of the pyroelectric sensor which when exposed to heat generates an 
+electric signal. A warm body emits infrared radiation(IR) and this pyroelectric sensor picks up this IR signals. On top 
+of the pyroelectric sensor there is a fresnel lens bounces the IR signals onto the pyroelectric sensor.
+
+## PIR Sensor pin description 
+This PIR Sensor has 3 different pins: power, ground, and the output. The output pin will give a 5v or a 0v signal 
+representing if the sensor has detected anything. 5v being that the sensor has detected IR signals and 0v for lack of 
+IR signals. The power is expected to use 5v-20v input with 65mA current consumption.  
+
+## Adjusting the PIR Sensor
+The PIR Sensor module has 2 potentiometers.
+1. Adjusting the sensitivity of the sensor to reach up tp 7 meters 
+2. Adjusting the time the output signal stays high when IR signals have been detected The time can be adjusted between
+0.3 seconds to 5 minutes.
+
+## Trigger modes
+The PIR Sensor module has a set of 3 pins to select the different types of trigger modes. 
+1. Non-repeatable trigger mode : This is when the PIR Sensor has been triggered and the output time has lapsed, the 
+output signal will automatically go back to zero 
+2. Repeatable trigger mode : Similar to mode 1 but once the output time has lapsed and the IR signals still are detected
+the output would remain high.
+In a security system the Repeatable trigger mode is what we are looking for. For different applications like backyard 
+light for night where you might only want to have it on for a short period of time.
+
+## PIR Sensor stabilization 
+The PIR Sensor when powering up need to have about a minute to stabilize to adjust to the area before any valid outputs 
+will occur. The average IR gets computed during this time and when a warm body comes into range, thats where the spike 
+of IR signal will occur causing the PIR Sensor to signal activity has occurred. 
+
+## PIR Sensor add ons
+The HC-SR501 PIR Motion Sensor has the ability to connect up to a few other modules right on this board for different
+applications. You can add alight sensitive resistor or a photo resistor. This can be used with the PIR Sensor so that it
+will make it only active in the dark. There is another place to add a thermal sensor which can factor readings into the
+PIR Motion Sensor.
+
+## Initial testing
+Before connecting up the Raspberry Pi this PIR Sensor can be tested without reading the output values pin. To do this
+experiment there needs to be an LED connected from the output pin to he ground pin. After the PIR Sensor has stabilized
+the LED will then turn on when IR signals have triggered the PIR Sensor. This was a good way to test out the PIR Sensor
+before adding any of the complexity of the Raspberry Pi.
+
 """
 
 
