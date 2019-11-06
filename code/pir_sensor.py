@@ -101,11 +101,9 @@ class PirSensor:
         GPIO.add_event_detect(self._PIR_PIN, GPIO.RISING, callback=self.pid_rising_callback, bouncetime=100)
         GPIO.add_event_detect(self._PIR_PIN, GPIO.FALLING, callback=self.pid_falling_callback, bouncetime=100)
 
-    # This will return True if the PIR has been triggered and False when no motion
     def read(self):
+        # This will return True if the PIR has been triggered and False when no motion
         return GPIO.input(self._PIR_PIN)
-
-    # TODO_AC - Consider looking into GPIO.add_event_detect callback instead of polling
 
     def pid_rising_callback(self):
         """
