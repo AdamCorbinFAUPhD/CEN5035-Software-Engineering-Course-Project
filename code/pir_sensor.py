@@ -49,6 +49,7 @@ experiment there needs to be an LED connected from the output pin to he ground p
 the LED will then turn on when IR signals have triggered the PIR Sensor. This was a good way to test out the PIR Sensor
 before adding any of the complexity of the Raspberry Pi.
 
+Source for some of this data: https://www.youtube.com/watch?v=ZC_sEW3_694
 """
 
 
