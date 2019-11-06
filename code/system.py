@@ -1,8 +1,15 @@
 import logging
+import queue
 from threading import Thread
 import socket
 from sys import exit
 import json
+
+from keypad import Keypad
+from led import LED
+from pir_event import PIREvent
+from pir_sensor import PirSensor
+
 
 class System:
     # __init__ is the class constructor and is also where you must define your instance variables
@@ -18,6 +25,12 @@ class System:
         self._running = False
         # list to keep track of worker threads
         self._threads = []
+
+        # Create the sub system items that the main system will monitor and control
+        self._keypad = Keypad()
+        self._led = LED()
+        self._pir_sensor = PirSensor()
+
         # Setup logging for this module.
         self._logger = logging.getLogger('Alarm System')
         ch = logging.StreamHandler()
@@ -47,14 +60,54 @@ class System:
             sensor_t.start()
             self._main_thread()
 
+    def _process_keypress_event(self, keypress_event: str):
+        """
+        The process of keypress event to deactivate or activate a system
+
+        :param keypress_event:
+        :return:
+        """
+        # TODO - add the keypress processing
+        pass
+
+    def _process_pir_event(self, pir_event: PIREvent):
+        """
+        The process of a PIR event that can signal an alarm if the system is armed
+
+        :param pir_event:
+        :return:
+        """
+        # TODO - add the pir event processing
+        pass
+
     def _sensor_thread(self):
         """
         Thread for checking the sensor inputs
         """
         self._logger.debug('starting sensor thread')
         while self._running:
-            # TODO: check sensors if required
-            pass
+            """
+            Keypress Event check
+            In the even of the queue being empty, the exception queue.Empty will be thrown. Thus a Try catch will be
+            needed to handle the normal case when no event is in the queue
+            """
+            try:
+                keypress_event = self._keypad.keypress_queue.get_nowait()
+                self._process_keypress_event(keypress_event)
+            except queue.Empty:
+                pass
+
+            """
+            PIR Event check
+            In the even of the queue being empty, the exception queue.Empty will be thrown. Thus a Try catch will be
+            needed to handle the normal case when no event is in the queue
+            """
+            try:
+                pir_event = self._pir_sensor.event_queue.get_nowait()
+                self._process_pir_event(pir_event)
+            except queue.Empty:
+                pass
+            # TODO - should we consider a delay in this tread to not eat up the process?
 
     def _main_thread(self):
         """
