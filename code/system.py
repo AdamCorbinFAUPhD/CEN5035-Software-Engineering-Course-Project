@@ -4,11 +4,29 @@ from threading import Thread
 import socket
 from sys import exit
 import json
+from time import time
 
 from keypad import Keypad
-from led import LED
+from led import LED, LEDColor
 from pir_event import PIREvent
 from pir_sensor import PirSensor
+
+"""
+# Arming the system
+To arm the system, press # followed by the system PIN. The system will allow the user to enter their pin within
+10 seconds of pressing #. Otherwise the pin will get cleared to allow the user to re-enter.  On successful arming of 
+the system the LED will flash green 5 times and the LED will be set to blue. 
+
+# Disarming the system
+When the system is armed the user can press the pin with a 10 second window from the first keypress. On successful 
+disarming, the LED will flash green 5 times and the LED will then be turned off.
+
+# Keypad entry behaviors
+* Pressing # will reset the internal tracking of the user entry.
+* Invalid entry of a pin will reset the internal tracking of the user entry and flash the LED red 2 times.
+* The letter keys will have no effect on the system.
+* Invalid entry of 4 times will lock the system for 5 minutes and set the red LED during this time. 
+"""
 
 
 class System:
@@ -21,15 +39,19 @@ class System:
         self._armed = False
         # setting to a default pin
         self._pin = pin
+        self._user_pin_entry = ""
+        self._user_first_key_entry_time = 0
+        self._invalid_entry_count = 0
+
+        # When user incorrectly enters in the pass code 4 times the system gets locked for 5min
+        self.system_locked = False
+        self._lock_time = 0
+        self._lockout_duration = 5 * 60  # currently set to 5 min but might consider less for testing
+
         # System needs to be running
         self._running = False
         # list to keep track of worker threads
         self._threads = []
-
-        # Create the sub system items that the main system will monitor and control
-        self._keypad = Keypad()
-        self._led = LED()
-        self._pir_sensor = PirSensor()
 
         # Setup logging for this module.
         self._logger = logging.getLogger('Alarm System')
@@ -47,7 +69,11 @@ class System:
         except socket.error as e:
             self._logger.fatal('{}'.format(e))
             exit(1)
-        # TODO: initialize sensor classes
+
+        # Create the sub system items that the main system will monitor and control
+        self._keypad = Keypad()
+        self._led = LED()
+        self._pir_sensor = PirSensor()
 
     def run(self):
         """
@@ -67,8 +93,26 @@ class System:
         :param keypress_event:
         :return:
         """
-        # TODO - add the keypress processing
-        pass
+        # When the last entry has been greater than 5 seconds, just clear the past data because of the timeout req
+        if time() - self._user_first_key_entry_time > 5:
+            self.reset_user_entry()
+
+        if not self.is_armed():
+            # start the timer for the first keypress and reset the user entry
+            if keypress_event == "#":
+                self.reset_user_entry()
+            else:
+                self._user_pin_entry += keypress_event
+                # Check for success, we will only check for valid entry when the sizes are the same
+                if len(self._user_pin_entry) == len(self._pin):
+                    self._arm(self._user_pin_entry)
+        else:
+            # TODO - processing for disarming system
+            pass
+
+    def reset_user_entry(self):
+        self._user_pin_entry = ""
+        self._user_first_key_entry_time = time()
 
     def _process_pir_event(self, pir_event: PIREvent):
         """
@@ -92,8 +136,20 @@ class System:
             needed to handle the normal case when no event is in the queue
             """
             try:
+                """
+                Monitor if the system is locked. When locked all keypress are ignored. After the 5min timer is up then
+                the time is reset and the system is unlocked
+                """
                 keypress_event = self._keypad.keypress_queue.get_nowait()
-                self._process_keypress_event(keypress_event)
+                if not self.system_locked:
+                    self._process_keypress_event(keypress_event)
+                else:
+                    # Once the lockout has expired, reset the invalid entry count and led status
+                    if time() - self._lock_time > self._lockout_duration:
+                        self.system_locked = False
+                        self._invalid_entry_count = 0
+                        self._led.turn_off(LEDColor.RED)
+
             except queue.Empty:
                 pass
 
@@ -107,6 +163,7 @@ class System:
                 self._process_pir_event(pir_event)
             except queue.Empty:
                 pass
+
             # TODO - should we consider a delay in this tread to not eat up the process?
 
     def _main_thread(self):
@@ -174,15 +231,28 @@ class System:
         # to create function documentation in pycharm simple type '"' three times and hit enter.
         """
         Arms the system if the system is not armed and the pin is correct.
+        Assumption: The pin entry is the same length as the given pin. Upon a failed check the user entry is reset
         :param pin: the system pin
         """
         if not self._armed and self._check_pin(pin):
             self._logger.info('System is now armed')
             self._armed = True
-            # TODO: device arming functions
+            self._led.flash_led(color=LEDColor.GREEN, flash_count=5)
+            self._led.turn_on(color=LEDColor.BLUE)
             return True
-        self._logger.info('Failed to arm system')
-        return False
+        else:
+            self._invalid_entry_count += 1
+            if self._invalid_entry_count == 4:
+                self._led.flash_led(color=LEDColor.RED, flash_count=5)
+                self._led.turn_on()
+                self._lock_time = time()
+                self.system_locked = True
+                self._logger.info('System is locked')
+            else:
+                self._led.flash_led(color=LEDColor.RED, flash_count=2)
+                self.reset_user_entry()
+                self._logger.info('Failed to arm system')
+            return False
 
     def _disarm(self, pin: str):
         """
