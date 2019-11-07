@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class PirEventType(Enum):
     """
     Enum class to define the different PIR events
@@ -31,6 +32,3 @@ class PIREvent:
     def __init__(self, time: float, event_type: PirEventType):
         self.time = time
         self.event_type = event_type
-
-
-
