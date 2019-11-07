@@ -1,4 +1,20 @@
+from time import sleep
+
 import RPi.GPIO as GPIO
+from enum import Enum
+
+
+class LEDColor(Enum):
+    """
+    This class is used to represent the different colors of led
+    """
+    RED = 1,
+    GREEN = 2,
+    BLUE = 3,
+    BLUE_RED = 4,  # Blue and Red
+    RED_GREEN = 5,  # Red and Green
+    BLUE_GREEN = 6     # Blue and Red
+
 
 """ 
 This class is intended to control the RGB led module. There are only 3 pins that need to be initialized. 
@@ -26,6 +42,7 @@ class LED:
     _LED_B: int
         The pin to control the blue LED
     """
+
     def __init__(self):
         # Initializing the GPIO Mode to Brodcom board pins which is what the T_Extension uses
         GPIO.setmode(GPIO.BCM)
@@ -37,6 +54,78 @@ class LED:
         GPIO.setup(self._LED_R, GPIO.OUT)
         GPIO.setup(self._LED_G, GPIO.OUT)
         GPIO.setup(self._LED_B, GPIO.OUT)
+
+    def clear_led(self):
+        self.red_off()
+        self.green_off()
+        self.blue_off()
+
+    def turn_off(self, color: LEDColor):
+        """
+        This method will control the LED to turn it off using the given color
+
+        :param color: Color to turn off
+        :return:
+        """
+        if color == LEDColor.RED:
+            self.red_off()
+        elif color == LEDColor.GREEN:
+            self.green_off()
+        elif color == LEDColor.BLUE:
+            self.blue_off()
+        elif color == LEDColor.BLUE_GREEN:
+            self.red_off()
+            self.green_off()
+        elif color == LEDColor.BLUE_RED:
+            self.red_off()
+            self.blue_off()
+        elif color == LEDColor.RED_GREEN:
+            self.red_off()
+            self.green_off()
+
+    def turn_on(self, color: LEDColor):
+        """
+        This method will control the LED to turn it on using the given color
+
+        :param color: Color to enable
+        :return:
+        """
+        if color == LEDColor.RED:
+            self.red_on()
+        elif color == LEDColor.GREEN:
+            self.green_on()
+        elif color == LEDColor.BLUE:
+            self.blue_on()
+        elif color == LEDColor.BLUE_GREEN:
+            self.red_on()
+            self.green_on()
+        elif color == LEDColor.BLUE_RED:
+            self.red_on()
+            self.blue_on()
+        elif color == LEDColor.RED_GREEN:
+            self.red_on()
+            self.green_on()
+
+    def flash_led(self, color: LEDColor, flash_count=0, period=0.4, stay_on=True):
+        """
+        This method will have the ability to control the state of the led along with adding some animation of turning
+        the led on & off to represent a flash. There might be a case where flashing is desired where the led does
+        not need to remain on. The flash will have a period of .4 sec. Because of the flashing this call is blacking
+        and will delay the program
+
+        :param period: duration the flash in seconds
+        :param stay_on: The desire to leave the LED on in the event of a flashing animation
+        :param color: The color to which is desired
+        :param flash_count: The number of times the LED should flash
+        :return:
+        """
+        for _ in range(flash_count):
+            self.turn_on(color)
+            sleep(period)
+            self.turn_off(color)
+
+        if stay_on:
+            self.turn_on(color)
 
     def red_on(self):
         """
