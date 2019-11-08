@@ -8,7 +8,7 @@ from time import time
 
 from keypad import Keypad
 from led import LED, LEDColor
-from pir_event import PIREvent
+from pir_event import PIREvent, PirEventType
 from pir_sensor import PirSensor
 
 """
@@ -23,9 +23,19 @@ disarming, the LED will flash green 5 times and the LED will then be turned off.
 
 # Keypad entry behaviors
 * Pressing # will reset the internal tracking of the user entry.
-* Invalid entry of a pin will reset the internal tracking of the user entry and flash the LED red 2 times.
+* Invalid entry of a pin will reset the internal tracking of the user entry and flash the LED red 5 times.
 * The letter keys will have no effect on the system.
-* Invalid entry of 4 times will lock the system for 5 minutes and set the red LED during this time. 
+* Invalid entry of 5 times will lock the system for 5 minutes and set the red LED during this time. 
+
+
+# Test cases
+1. Arm the system by pressing "#" then the pin. Verify that the led flashed green 5 time and then the led then turned blue
+2. Lock the system after 5 invalid pins when the system is disarmed. Verify led flashes red and then stays on red until
+the timeout expires
+3. Lock the system after 5 invalid pins when the system is armed. Verify led flashes red and then stays on red until
+the timeout expires
+4. Verify that when a pin in incorrectly entered that the led flashes red 5x
+5. Verify the system can be disarmed on a correct pin entry by verifying that the green LED flashes green and then turns off.
 """
 
 
@@ -47,6 +57,8 @@ class System:
         self.system_locked = False
         self._lock_time = 0
         self._lockout_duration = 5 * 60  # currently set to 5 min but might consider less for testing
+        self._pin_entry_max_timeout = 10  # Unit in seconds
+        self._max_invalid_entry_before_system_lock = 4
 
         # System needs to be running
         self._running = False
@@ -71,9 +83,9 @@ class System:
             exit(1)
 
         # Create the sub system items that the main system will monitor and control
-        self._keypad = Keypad()
-        self._led = LED()
-        self._pir_sensor = PirSensor()
+        self._keypad = Keypad(self._logger)
+        self._led = LED(self._logger)
+        self._pir_sensor = PirSensor(self._logger)
 
     def run(self):
         """
@@ -93,8 +105,8 @@ class System:
         :param keypress_event:
         :return:
         """
-        # When the last entry has been greater than 5 seconds, just clear the past data because of the timeout req
-        if time() - self._user_first_key_entry_time > 5:
+        # When the last entry has been greater than x seconds, just clear the past data because of the timeout req
+        if time() - self._user_first_key_entry_time > self._pin_entry_max_timeout:
             self.reset_user_entry()
 
         if not self.is_armed():
@@ -107,7 +119,10 @@ class System:
                 if len(self._user_pin_entry) == len(self._pin):
                     self._arm(self._user_pin_entry)
         else:
-            # TODO - processing for disarming system
+            self._user_pin_entry += keypress_event
+            if len(self._user_pin_entry) == len(self._pin):
+                self._disarm(self._user_pin_entry)
+
             pass
 
     def reset_user_entry(self):
@@ -121,7 +136,10 @@ class System:
         :param pir_event:
         :return:
         """
-        # TODO - add the pir event processing
+        if pir_event.event_type == PirEventType.falling:
+            pass
+        elif pir_event.event_type == PirEventType.rising:
+            pass
         pass
 
     def _sensor_thread(self):
@@ -241,18 +259,21 @@ class System:
             self._led.turn_on(color=LEDColor.BLUE)
             return True
         else:
-            self._invalid_entry_count += 1
-            if self._invalid_entry_count == 4:
-                self._led.flash_led(color=LEDColor.RED, flash_count=5)
-                self._led.turn_on()
-                self._lock_time = time()
-                self.system_locked = True
-                self._logger.info('System is locked')
-            else:
-                self._led.flash_led(color=LEDColor.RED, flash_count=2)
-                self.reset_user_entry()
-                self._logger.info('Failed to arm system')
-            return False
+            return self.invalid_pin_entry()
+
+    def invalid_pin_entry(self):
+        self._invalid_entry_count += 1
+        if self._invalid_entry_count > self._max_invalid_entry_before_system_lock:
+            self._led.flash_led(color=LEDColor.RED, flash_count=5)
+            self._led.turn_on(color=LEDColor.RED)
+            self._lock_time = time()
+            self.system_locked = True
+            self._logger.info('System is locked')
+        else:
+            self._led.flash_led(color=LEDColor.RED, flash_count=2)
+            self.reset_user_entry()
+            self._logger.info('Failed to enter the pin correctly')
+        return False
 
     def _disarm(self, pin: str):
         """
@@ -260,11 +281,16 @@ class System:
         :param pin: the system pin
         :return:
         """
-        if self._armed and self._check_pin(pin):
-            self._logger.info('System is now disarmed')
-            self._armed = False
-            # TODO: device disarm functions
-            return True
+        if self._armed :
+            if self._check_pin(pin):
+                self._logger.info('System is now disarmed')
+                self._armed = False
+                self._led.clear_led()
+                self._led.flash_led(color=LEDColor.GREEN, flash_count=5)
+                return True
+            else:
+                return self.invalid_pin_entry()
+
         self._logger.info('Failed to disarmed system')
         return False
 
