@@ -98,21 +98,19 @@ class PirSensor:
 
         GPIO.setup(self._PIR_PIN, GPIO.IN)
         # Adding a debounce time of 100ms just to insure we dont have a double trigger of a detection
-        GPIO.add_event_detect(self._PIR_PIN, GPIO.RISING, callback=self.pid_rising_callback, bouncetime=100)
-        GPIO.add_event_detect(self._PIR_PIN, GPIO.FALLING, callback=self.pid_falling_callback, bouncetime=100)
+        GPIO.add_event_detect(self._PIR_PIN, GPIO.BOTH, callback=self.pid_callback, bouncetime=100)
 
     def read(self):
         # This will return True if the PIR has been triggered and False when no motion
         return GPIO.input(self._PIR_PIN)
 
-    def pid_rising_callback(self):
+    def pid_callback(self):
         """
-        Callback to send the rising PIREvent to the event_queue
+        Callback to send the rising or falling PIREvent to the event_queue
+        To determine if its falling or rising we check the value of the input put. If its low, then it was a falling
+        event. If it was high, then it was a rising event
         """
-        self.event_queue.put(PIREvent(time=time.time(), event_type=PirEventType.rising))
-
-    def pid_falling_callback(self):
-        """
-        Callback to send the falling PIREvent to the event_queue
-        """
-        self.event_queue.put(PIREvent(time=time.time(), event_type=PirEventType.falling))
+        if GPIO.input(self._PIR_PIN) == 0:
+            self.event_queue.put(PIREvent(time=time.time(), event_type=PirEventType.falling))
+        else:
+            self.event_queue.put(PIREvent(time=time.time(), event_type=PirEventType.rising))
