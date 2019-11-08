@@ -136,10 +136,12 @@ class System:
         :param pir_event:
         :return:
         """
+        # TODO - hand when armed, start flashing a color to indicate that we need to enter the pin
+        # Basically this is latching until it has been cleared by the user.
         if pir_event.event_type == PirEventType.falling:
-            pass
+            self._logger.debug('Falling event occured')
         elif pir_event.event_type == PirEventType.rising:
-            pass
+            self._logger.debug('Rising event occured')
         pass
 
     def _sensor_thread(self):
