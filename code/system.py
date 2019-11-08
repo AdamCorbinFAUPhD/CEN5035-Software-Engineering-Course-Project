@@ -258,6 +258,7 @@ class System:
             self._led.flash_led(color=LEDColor.GREEN, flash_count=5)
             self._led.turn_on(color=LEDColor.BLUE)
             self.reset_user_entry()
+            self._invalid_entry_count = 0
             return True
         else:
             return self.invalid_pin_entry()
@@ -288,6 +289,7 @@ class System:
                 self._armed = False
                 self._led.clear_led()
                 self._led.flash_led(color=LEDColor.GREEN, flash_count=5)
+                self._invalid_entry_count = 0
                 return True
             else:
                 return self.invalid_pin_entry()
