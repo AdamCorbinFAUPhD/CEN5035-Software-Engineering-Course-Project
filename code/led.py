@@ -125,19 +125,22 @@ class LED:
             self._green_on()
             self._logger.debug('Setting LED to RED_GREEN')
 
-    def flash_led(self, color: LEDColor, flash_count=0, period=0.4, stay_on=False):
+    def flash_led(self, color: LEDColor, flash_count=0, period=0.2, stay_on=False, keep_previous_state=True):
         """
         This method will have the ability to control the state of the led along with adding some animation of turning
         the led on & off to represent a flash. There might be a case where flashing is desired where the led does
         not need to remain on. The flash will have a period of .4 sec. Because of the flashing this call is blacking
         and will delay the program
 
+        :param keep_previous_state: If there was a led state enabled before, be sure to reset it back to that before
         :param period: duration the flash in seconds
         :param stay_on: The desire to leave the LED on in the event of a flashing animation
         :param color: The color to which is desired
         :param flash_count: The number of times the LED should flash
         :return:
         """
+        last_color = self.color
+        last_enable = self.enabled
         self.clear_led()
         self._logger.debug('Flashing LED')
         for _ in range(flash_count):
@@ -148,6 +151,9 @@ class LED:
 
         if stay_on:
             self.turn_on(color)
+
+        if last_enable:
+            self.turn_on(last_color)
 
     def _red_on(self):
         """
