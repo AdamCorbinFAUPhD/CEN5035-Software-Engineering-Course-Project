@@ -257,6 +257,7 @@ class System:
             self._armed = True
             self._led.flash_led(color=LEDColor.GREEN, flash_count=5)
             self._led.turn_on(color=LEDColor.BLUE)
+            self.reset_user_entry()
             return True
         else:
             return self.invalid_pin_entry()
