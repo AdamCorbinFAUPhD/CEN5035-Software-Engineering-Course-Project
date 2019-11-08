@@ -100,9 +100,10 @@ class LED:
         :return:
         """
 
+        self.clear_led()
+
         self.enabled = True
         self.color = color
-        self.clear_led()
         if color == LEDColor.RED:
             self._red_on()
             self._logger.debug('Setting LED to RED')
@@ -141,6 +142,7 @@ class LED:
         """
         last_color = self.color
         last_enable = self.enabled
+        self._logger.debug('LED - Previous state= ', last_color, last_enable)
         self.clear_led()
         self._logger.debug('Flashing LED')
         for _ in range(flash_count):
@@ -152,7 +154,7 @@ class LED:
         if stay_on:
             self.turn_on(color)
 
-        if last_enable:
+        if keep_previous_state and last_enable:
             self.turn_on(last_color)
 
     def _red_on(self):
