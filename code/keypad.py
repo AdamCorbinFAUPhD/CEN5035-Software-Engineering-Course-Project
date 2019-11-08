@@ -68,7 +68,7 @@ class Keypad:
 
         for row in self._row_pins:
             GPIO.setup(row, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-
+        self._logger.debug('Keypad object created')
         # Start monitoring for key presses
         self.thread.start()
 
