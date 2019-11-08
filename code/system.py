@@ -13,8 +13,8 @@ from pir_sensor import PirSensor
 
 """
 # Arming the system
-To arm the system, press # followed by the system PIN. The system will allow the user to enter their pin within
-10 seconds of pressing #. Otherwise the pin will get cleared to allow the user to re-enter.  On successful arming of 
+To arm the system, press # the system PIN. The system will allow the user to enter their pin within
+10 seconds of first keypress. Otherwise the pin will get cleared to allow the user to re-enter.  On successful arming of 
 the system the LED will flash green 5 times and the LED will be set to blue. 
 
 # Disarming the system
@@ -29,7 +29,7 @@ disarming, the LED will flash green 5 times and the LED will then be turned off.
 
 
 # Test cases
-1. Arm the system by pressing "#" then the pin. Verify that the led flashed green 5 time and then the led then turned blue
+1. Arm the system by pressing the pin. Verify that the led flashed green 5 time and then the led then turned blue
 2. Lock the system after 5 invalid pins when the system is disarmed. Verify led flashes red and then stays on red until
 the timeout expires
 3. Lock the system after 5 invalid pins when the system is armed. Verify led flashes red and then stays on red until
