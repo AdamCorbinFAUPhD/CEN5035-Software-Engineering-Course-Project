@@ -51,14 +51,17 @@ class LED:
         self._LED_R = 16
         self._LED_G = 20
         self._LED_B = 21
+        self.color = LEDColor.RED
+        self.enabled = False
         GPIO.setup(self._LED_R, GPIO.OUT)
         GPIO.setup(self._LED_G, GPIO.OUT)
         GPIO.setup(self._LED_B, GPIO.OUT)
 
     def clear_led(self):
-        self.red_off()
-        self.green_off()
-        self.blue_off()
+        self.enabled = False
+        self._red_off()
+        self._green_off()
+        self._blue_off()
 
     def turn_off(self, color: LEDColor):
         """
@@ -67,21 +70,22 @@ class LED:
         :param color: Color to turn off
         :return:
         """
+        self.enabled = False
         if color == LEDColor.RED:
-            self.red_off()
+            self._red_off()
         elif color == LEDColor.GREEN:
-            self.green_off()
+            self._green_off()
         elif color == LEDColor.BLUE:
-            self.blue_off()
+            self._blue_off()
         elif color == LEDColor.BLUE_GREEN:
-            self.red_off()
-            self.green_off()
+            self._red_off()
+            self._green_off()
         elif color == LEDColor.BLUE_RED:
-            self.red_off()
-            self.blue_off()
+            self._red_off()
+            self._blue_off()
         elif color == LEDColor.RED_GREEN:
-            self.red_off()
-            self.green_off()
+            self._red_off()
+            self._green_off()
 
     def turn_on(self, color: LEDColor):
         """
@@ -90,21 +94,23 @@ class LED:
         :param color: Color to enable
         :return:
         """
+        self.enabled = True
+        self.color = color
         if color == LEDColor.RED:
-            self.red_on()
+            self._red_on()
         elif color == LEDColor.GREEN:
-            self.green_on()
+            self._green_on()
         elif color == LEDColor.BLUE:
-            self.blue_on()
+            self._blue_on()
         elif color == LEDColor.BLUE_GREEN:
-            self.red_on()
-            self.green_on()
+            self._red_on()
+            self._green_on()
         elif color == LEDColor.BLUE_RED:
-            self.red_on()
-            self.blue_on()
+            self._red_on()
+            self._blue_on()
         elif color == LEDColor.RED_GREEN:
-            self.red_on()
-            self.green_on()
+            self._red_on()
+            self._green_on()
 
     def flash_led(self, color: LEDColor, flash_count=0, period=0.4, stay_on=True):
         """
@@ -119,6 +125,7 @@ class LED:
         :param flash_count: The number of times the LED should flash
         :return:
         """
+        self.clear_led()
         for _ in range(flash_count):
             self.turn_on(color)
             sleep(period)
@@ -127,37 +134,37 @@ class LED:
         if stay_on:
             self.turn_on(color)
 
-    def red_on(self):
+    def _red_on(self):
         """
         Sets the red pin to True which enables the Red LED
         """
         GPIO.output(self._LED_R, True)
 
-    def red_off(self):
+    def _red_off(self):
         """
         Sets the red pin to False which disables the Red LED
         """
         GPIO.output(self._LED_R, False)
 
-    def green_on(self):
+    def _green_on(self):
         """
         Sets the green pin to True which enables the Green LED
         """
         GPIO.output(self._LED_G, True)
 
-    def green_off(self):
+    def _green_off(self):
         """
         Sets the green pin to False which disables the Green LED
         """
         GPIO.output(self._LED_G, False)
 
-    def blue_on(self):
+    def _blue_on(self):
         """
         Sets the blue pin to True which enables the Blue LED
         """
         GPIO.output(self._LED_B, True)
 
-    def blue_off(self):
+    def _blue_off(self):
         """
         Sets the green pin to False which disables the Green LED
         """
