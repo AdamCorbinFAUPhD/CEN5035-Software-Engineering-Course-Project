@@ -90,9 +90,9 @@ class PirSensor:
     event_queue: Queue
         Pass in the timestamp and whether it was a Rising or Falling detection
     """
-    def __init__(self):
+    def __init__(self, logger):
         GPIO.setmode(GPIO.BCM)
-
+        self._logger = logger
         self._PIR_PIN = 19
         self.event_queue = Queue()  # Uses the PirEvent class to pass the messages
 
@@ -111,6 +111,8 @@ class PirSensor:
         event. If it was high, then it was a rising event
         """
         if GPIO.input(self._PIR_PIN) == 0:
+            self._logger.debug('PIR Event Falling')
             self.event_queue.put(PIREvent(time=time.time(), event_type=PirEventType.falling))
         else:
+            self._logger.debug('PIR Event Rising')
             self.event_queue.put(PIREvent(time=time.time(), event_type=PirEventType.rising))

@@ -42,7 +42,7 @@ class Keypad:
         Pass in the key that was pressed in the queue to be processed by a separate thread
     """
 
-    def __init__(self):
+    def __init__(self, logger):
         """
         Initialization of the Keypad object. The only consideration is to make sure the thread is not started before
             the gpio pins are initialized.
@@ -60,6 +60,7 @@ class Keypad:
                         ['4', '5', '6', 'B'],
                         ['7', '8', '9', 'C'],
                         ['*', '0', '#', 'D']]
+        self._logger = logger
 
         for col in self._column_pins:
             GPIO.setup(col, GPIO.OUT)
@@ -86,5 +87,6 @@ class Keypad:
                         while GPIO.input(self._row_pins[i]) == 0:
                             pass
                         # add the key that was pressed into the queue
+                        self._logger.debug('Key entered:' + self._matrix[i][j])
                         self.keypress_queue.put(self._matrix[i][j])
                 GPIO.output(self._column_pins[j], 1)

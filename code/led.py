@@ -43,7 +43,8 @@ class LED:
         The pin to control the blue LED
     """
 
-    def __init__(self):
+    def __init__(self, logger):
+        self._logger = logger
         # Initializing the GPIO Mode to Brodcom board pins which is what the T_Extension uses
         GPIO.setmode(GPIO.BCM)
 
@@ -58,6 +59,7 @@ class LED:
         GPIO.setup(self._LED_B, GPIO.OUT)
 
     def clear_led(self):
+        self._logger.debug('Clearing LED')
         self.enabled = False
         self._red_off()
         self._green_off()
@@ -70,6 +72,7 @@ class LED:
         :param color: Color to turn off
         :return:
         """
+        self._logger.debug('Turning off LED')
         self.enabled = False
         if color == LEDColor.RED:
             self._red_off()
@@ -94,23 +97,31 @@ class LED:
         :param color: Color to enable
         :return:
         """
+
         self.enabled = True
         self.color = color
+        self.clear_led()
         if color == LEDColor.RED:
             self._red_on()
+            self._logger.debug('Setting LED to RED')
         elif color == LEDColor.GREEN:
             self._green_on()
+            self._logger.debug('Setting LED to GREEN')
         elif color == LEDColor.BLUE:
             self._blue_on()
+            self._logger.debug('Setting LED to BLUE')
         elif color == LEDColor.BLUE_GREEN:
             self._red_on()
             self._green_on()
+            self._logger.debug('Setting LED to BLUE_GREEN')
         elif color == LEDColor.BLUE_RED:
             self._red_on()
             self._blue_on()
+            self._logger.debug('Setting LED to RED_BLUE')
         elif color == LEDColor.RED_GREEN:
             self._red_on()
             self._green_on()
+            self._logger.debug('Setting LED to RED_GREEN')
 
     def flash_led(self, color: LEDColor, flash_count=0, period=0.4, stay_on=True):
         """
@@ -126,6 +137,7 @@ class LED:
         :return:
         """
         self.clear_led()
+        self._logger.debug('Flashing LED')
         for _ in range(flash_count):
             self.turn_on(color)
             sleep(period)
