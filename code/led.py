@@ -57,6 +57,8 @@ class LED:
         GPIO.setup(self._LED_R, GPIO.OUT)
         GPIO.setup(self._LED_G, GPIO.OUT)
         GPIO.setup(self._LED_B, GPIO.OUT)
+        self.clear_led()
+        self._logger.debug('LED object created')
 
     def clear_led(self):
         self._logger.debug('Clearing LED')
@@ -123,7 +125,7 @@ class LED:
             self._green_on()
             self._logger.debug('Setting LED to RED_GREEN')
 
-    def flash_led(self, color: LEDColor, flash_count=0, period=0.4, stay_on=True):
+    def flash_led(self, color: LEDColor, flash_count=0, period=0.4, stay_on=False):
         """
         This method will have the ability to control the state of the led along with adding some animation of turning
         the led on & off to represent a flash. There might be a case where flashing is desired where the led does
@@ -142,6 +144,7 @@ class LED:
             self.turn_on(color)
             sleep(period)
             self.turn_off(color)
+            sleep(period)
 
         if stay_on:
             self.turn_on(color)
