@@ -98,7 +98,7 @@ class PirSensor:
 
         GPIO.setup(self._PIR_PIN, GPIO.IN)
         # Adding a debounce time of 100ms just to insure we dont have a double trigger of a detection
-        GPIO.add_event_detect(self._PIR_PIN, GPIO.BOTH, callback=self.pid_callback, bouncetime=100)
+        GPIO.add_event_detect(self._PIR_PIN, GPIO.BOTH, callback=lambda x: self.pid_callback())
         self._logger.debug('PIR object created')
 
     def read(self):
