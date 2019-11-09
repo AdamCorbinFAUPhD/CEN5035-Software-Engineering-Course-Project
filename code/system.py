@@ -4,7 +4,7 @@ from threading import Thread
 import socket
 from sys import exit
 import json
-from time import time
+from time import time, sleep
 
 from keypad import Keypad
 from led import LED, LEDColor
@@ -23,9 +23,9 @@ disarming, the LED will flash green 5 times and the LED will then be turned off.
 
 # Keypad entry behaviors
 * Pressing # will reset the internal tracking of the user entry.
-* Invalid entry of a pin will reset the internal tracking of the user entry and flash the LED red 5 times.
+* Invalid entry of a pin will reset the internal tracking of the user entry and flash the LED yellow 5 times.
 * The letter keys will have no effect on the system.
-* Invalid entry of 5 times will lock the system for 5 minutes and set the red LED during this time. 
+* Invalid entry of 5 times will lock the system for 5 minutes and set the yellow LED during this time. 
 
 
 # Test cases
@@ -59,11 +59,15 @@ class System:
         self._lockout_duration = 5 * 60  # currently set to 5 min but might consider less for testing
         self._pin_entry_max_timeout = 10  # Unit in seconds
         self._max_invalid_entry_before_system_lock = 4
+        self.alarm_active = False
 
         # System needs to be running
         self._running = False
         # list to keep track of worker threads
         self._threads = []
+        # Any threads that need to be created
+        alarm_t = Thread(target=self._alarm, args=(), name="alarm_thread")
+        self._threads.append(alarm_t)
 
         # Setup logging for this module.
         self._logger = logging.getLogger('Alarm System')
@@ -93,7 +97,7 @@ class System:
         """
         if not self._running:
             self._running = True
-            sensor_t = Thread(target=self._sensor_thread, args=())
+            sensor_t = Thread(target=self._sensor_thread, args=(), name="Sensor_Thread")
             self._threads.append(sensor_t)
             sensor_t.start()
             self._main_thread()
@@ -129,19 +133,41 @@ class System:
         self._user_pin_entry = ""
         self._user_first_key_entry_time = time()
 
+    def _alarm(self):
+        """
+        This method is intended to handle the processing when the alarm needs to go off. Sounding an alarm and led
+        This is indented to be run in a thread and killed when all conditions have been met
+        :return:
+        """
+        while True:
+            self._led.turn_on(LEDColor.RED)
+            sleep(.2)
+            self._led.turn_off(LEDColor.RED)
+            sleep(.2)
+
     def _process_pir_event(self, pir_event: PIREvent):
         """
         The process of a PIR event that can signal an alarm if the system is armed
 
+        For the alarm it will be latched. A latched alarm means that once it has been activated someone has to
+        manually disable it using the pin or some kind of confirmation.
+
         :param pir_event:
         :return:
         """
-        # TODO - hand when armed, start flashing a color to indicate that we need to enter the pin
-        # Basically this is latching until it has been cleared by the user.
+
         if pir_event.event_type == PirEventType.falling:
-            self._logger.debug('Falling event occured')
+            self._logger.debug('Falling event occurred')
         elif pir_event.event_type == PirEventType.rising:
-            self._logger.debug('Rising event occured')
+            if self.is_armed():
+                # First event that has occurred when armed, start the alarm thread
+                if not self.alarm_active:
+                    for t in self._threads:
+                        if t.name == "alarm_thread":
+                            t.start()
+                            self.alarm_active = True
+                            self._logger.info('Alarm has been activated')
+            self._logger.debug('Rising event occurred')
         pass
 
     def _sensor_thread(self):
@@ -268,13 +294,13 @@ class System:
     def invalid_pin_entry(self):
         self._invalid_entry_count += 1
         if self._invalid_entry_count > self._max_invalid_entry_before_system_lock:
-            self._led.flash_led(color=LEDColor.RED, flash_count=5)
+            self._led.flash_led(color=LEDColor.YELLOW, flash_count=5)
             self._led.turn_on(color=LEDColor.RED)
             self._lock_time = time()
             self.system_locked = True
             self._logger.info('System is locked')
         else:
-            self._led.flash_led(color=LEDColor.RED, flash_count=2)
+            self._led.flash_led(color=LEDColor.YELLOW, flash_count=2)
             self.reset_user_entry()
             self._logger.info('Failed to enter the pin correctly')
         return False
@@ -285,13 +311,21 @@ class System:
         :param pin: the system pin
         :return:
         """
-        if self._armed :
+        if self._armed:
             if self._check_pin(pin):
+                # When the alarm is running, that thread now needs to be stopped.
+                if self.alarm_active:
+                    for t in self._threads:
+                        if t.name == "alarm_thread":
+                            t.join()
+                            self.alarm_active = False
+                            self._logger.info('Alarm turned off')
                 self._logger.info('System is now disarmed')
                 self._armed = False
                 self._led.clear_led()
                 self._led.flash_led(color=LEDColor.GREEN, flash_count=5)
                 self._invalid_entry_count = 0
+
                 return True
             else:
                 return self.invalid_pin_entry()
