@@ -12,7 +12,7 @@ class LEDColor(Enum):
     GREEN = 2,
     BLUE = 3,
     BLUE_RED = 4,  # Blue and Red
-    RED_GREEN = 5,  # Red and Green
+    YELLOW = 5,  # Red and Green which make yellow
     BLUE_GREEN = 6     # Blue and Red
 
 
@@ -88,7 +88,7 @@ class LED:
         elif color == LEDColor.BLUE_RED:
             self._red_off()
             self._blue_off()
-        elif color == LEDColor.RED_GREEN:
+        elif color == LEDColor.YELLOW:
             self._red_off()
             self._green_off()
 
@@ -121,7 +121,7 @@ class LED:
             self._red_on()
             self._blue_on()
             self._logger.debug('Setting LED to RED_BLUE')
-        elif color == LEDColor.RED_GREEN:
+        elif color == LEDColor.YELLOW:
             self._red_on()
             self._green_on()
             self._logger.debug('Setting LED to RED_GREEN')
