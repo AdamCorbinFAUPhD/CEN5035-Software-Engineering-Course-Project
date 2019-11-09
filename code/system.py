@@ -1,6 +1,6 @@
 import logging
 import queue
-from threading import Thread
+from threading import Thread, Timer
 import socket
 from sys import exit
 import json
@@ -15,7 +15,8 @@ from pir_sensor import PirSensor
 # Arming the system
 To arm the system, press # the system PIN. The system will allow the user to enter their pin within
 10 seconds of first keypress. Otherwise the pin will get cleared to allow the user to re-enter.  On successful arming of 
-the system the LED will flash green 5 times and the LED will be set to blue. 
+the system the LED will flash green 5 times and the LED will be set to blue. When arming the system, the system needs to 
+give at least 1 min for the home owner to leave the house before it sensing becomes active
 
 # Disarming the system
 When the system is armed the user can press the pin with a 10 second window from the first keypress. On successful 
@@ -47,6 +48,9 @@ class System:
         # used for private functions
         # The 'self' indicates that this variable is an instance variable much like 'this' is used in other languages.
         self._armed = False
+        # When arming a system, the system needs to give a delay in order to for the home owner to leave the house
+        # without tripping the alarm system
+        self._arm_time_delay = 5  # 1 * 60
         # setting to a default pin
         self._pin = pin
         self._user_pin_entry = ""
@@ -140,10 +144,10 @@ class System:
         :return:
         """
         while True:
-            self._led.turn_on(LEDColor.RED)
-            sleep(.2)
-            self._led.turn_off(LEDColor.RED)
-            sleep(.2)
+            self._led.turn_on(color=LEDColor.RED, debug=False)
+            sleep(.1)
+            self._led.turn_off(color=LEDColor.RED, debug=False)
+            sleep(.1)
 
     def _process_pir_event(self, pir_event: PIREvent):
         """
@@ -273,6 +277,9 @@ class System:
             t.join()
         self._logger.debug('threads joined')
 
+    def _set_arm_after_delay(self):
+        self._armed = True
+
     def _arm(self, pin: str):
         # to create function documentation in pycharm simple type '"' three times and hit enter.
         """
@@ -287,6 +294,7 @@ class System:
             self._led.turn_on(color=LEDColor.BLUE)
             self.reset_user_entry()
             self._invalid_entry_count = 0
+            Timer(self._arm_time_delay, self._set_arm_after_delay, ()).start()
             return True
         else:
             return self.invalid_pin_entry()

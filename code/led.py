@@ -13,7 +13,7 @@ class LEDColor(Enum):
     BLUE = 3,
     BLUE_RED = 4,  # Blue and Red
     YELLOW = 5,  # Red and Green which make yellow
-    BLUE_GREEN = 6     # Blue and Red
+    BLUE_GREEN = 6  # Blue and Red
 
 
 """ 
@@ -67,14 +67,15 @@ class LED:
         self._green_off()
         self._blue_off()
 
-    def turn_off(self, color: LEDColor):
+    def turn_off(self, color: LEDColor, debug: bool = True):
         """
         This method will control the LED to turn it off using the given color
 
+        :param debug: way to force debug off or on
         :param color: Color to turn off
         :return:
         """
-        self._logger.debug('Turning off LED')
+        if debug: self._logger.debug('Turning off LED')
         self.enabled = False
         if color == LEDColor.RED:
             self._red_off()
@@ -92,10 +93,11 @@ class LED:
             self._red_off()
             self._green_off()
 
-    def turn_on(self, color: LEDColor):
+    def turn_on(self, color: LEDColor, debug: bool = True):
         """
         This method will control the LED to turn it on using the given color
 
+        :param debug: way to force debug off or no
         :param color: Color to enable
         :return:
         """
@@ -106,27 +108,27 @@ class LED:
         self.color = color
         if color == LEDColor.RED:
             self._red_on()
-            self._logger.debug('Setting LED to RED')
+            if debug: self._logger.debug('Setting LED to RED')
         elif color == LEDColor.GREEN:
             self._green_on()
-            self._logger.debug('Setting LED to GREEN')
+            if debug: self._logger.debug('Setting LED to GREEN')
         elif color == LEDColor.BLUE:
             self._blue_on()
-            self._logger.debug('Setting LED to BLUE')
+            if debug: self._logger.debug('Setting LED to BLUE')
         elif color == LEDColor.BLUE_GREEN:
             self._red_on()
             self._green_on()
-            self._logger.debug('Setting LED to BLUE_GREEN')
+            if debug: self._logger.debug('Setting LED to BLUE_GREEN')
         elif color == LEDColor.BLUE_RED:
             self._red_on()
             self._blue_on()
-            self._logger.debug('Setting LED to RED_BLUE')
+            if debug: self._logger.debug('Setting LED to RED_BLUE')
         elif color == LEDColor.YELLOW:
             self._red_on()
             self._green_on()
-            self._logger.debug('Setting LED to RED_GREEN')
+            if debug: self._logger.debug('Setting LED to RED_GREEN')
 
-    def flash_led(self, color: LEDColor, flash_count=0, period=0.2, stay_on=False, keep_previous_state=True):
+    def flash_led(self, color: LEDColor, flash_count=0, period=0.1, stay_on=False, keep_previous_state=True):
         """
         This method will have the ability to control the state of the led along with adding some animation of turning
         the led on & off to represent a flash. There might be a case where flashing is desired where the led does
