@@ -28,6 +28,13 @@ disarming, the LED will flash green 5 times and the LED will then be turned off.
 * The letter keys will have no effect on the system.
 * Invalid entry of 5 times will lock the system for 5 minutes and set the yellow LED during this time. 
 
+# Activating the alarm
+When the system has been armed and the delay time has pass to allow for the home owner to leave the house the PIR is 
+sensing for any IR sensing disturbance. If this case is met the alarm system will be active. 
+
+Lesson learned: In python a tread can not be started twice. The initial idea was going to just start and stop the thread
+which python doesnt like to do. From this we have an alarm thread that will always be running to just use a flag to keep
+track of the alarm should be active or not.  
 
 # Test cases
 1. Arm the system by pressing the pin. Verify that the led flashed green 5 time and then the led then turned blue
@@ -71,6 +78,7 @@ class System:
         self._threads = []
         # Any threads that need to be created
         alarm_t = Thread(target=self._alarm, args=(), name="alarm_thread")
+        alarm_t.start()
         self._threads.append(alarm_t)
 
         # Setup logging for this module.
@@ -128,10 +136,9 @@ class System:
                     self._arm(self._user_pin_entry)
         else:
             self._user_pin_entry += keypress_event
+            self._logger.debug('current pass code:' + self._user_pin_entry)
             if len(self._user_pin_entry) == len(self._pin):
                 self._disarm(self._user_pin_entry)
-
-            pass
 
     def reset_user_entry(self):
         self._user_pin_entry = ""
@@ -140,14 +147,19 @@ class System:
     def _alarm(self):
         """
         This method is intended to handle the processing when the alarm needs to go off. Sounding an alarm and led
-        This is indented to be run in a thread and killed when all conditions have been met
+        This is indented to be run in a thread and only run when alram is active
         :return:
         """
         while True:
-            self._led.turn_on(color=LEDColor.RED, debug=False)
-            sleep(.1)
-            self._led.turn_off(color=LEDColor.RED, debug=False)
-            sleep(.1)
+            if self.alarm_active:
+                self._led.turn_on(color=LEDColor.RED, debug=False)
+                sleep(.1)
+                self._led.turn_off(color=LEDColor.RED, debug=False)
+                sleep(.1)
+            else:
+                # Added to not eat up the processing. This give a max of .5 delay when the alarm can be started
+                sleep(.5)
+
 
     def _process_pir_event(self, pir_event: PIREvent):
         """
@@ -164,13 +176,10 @@ class System:
             self._logger.debug('Falling event occurred')
         elif pir_event.event_type == PirEventType.rising:
             if self.is_armed():
-                # First event that has occurred when armed, start the alarm thread
+                # First event that has occurred when armed, activate alarm thread
                 if not self.alarm_active:
-                    for t in self._threads:
-                        if t.name == "alarm_thread":
-                            t.start()
-                            self.alarm_active = True
-                            self._logger.info('Alarm has been activated')
+                    self.alarm_active = True
+                    self._logger.info('Alarm has been activated')
             self._logger.debug('Rising event occurred')
         pass
 
@@ -289,11 +298,10 @@ class System:
         """
         if not self._armed and self._check_pin(pin):
             self._logger.info('System is now armed')
-            self._armed = True
-            self._led.flash_led(color=LEDColor.GREEN, flash_count=5)
-            self._led.turn_on(color=LEDColor.BLUE)
             self.reset_user_entry()
             self._invalid_entry_count = 0
+            self._led.flash_led(color=LEDColor.GREEN, flash_count=5)
+            self._led.turn_on(color=LEDColor.BLUE)
             Timer(self._arm_time_delay, self._set_arm_after_delay, ()).start()
             return True
         else:
@@ -321,13 +329,11 @@ class System:
         """
         if self._armed:
             if self._check_pin(pin):
-                # When the alarm is running, that thread now needs to be stopped.
+                # When the alarm is running, deactivate alarm
                 if self.alarm_active:
-                    for t in self._threads:
-                        if t.name == "alarm_thread":
-                            t.join()
-                            self.alarm_active = False
-                            self._logger.info('Alarm turned off')
+                    self.alarm_active = False
+                    self._logger.info('Alarm turned off')
+                self.reset_user_entry()
                 self._logger.info('System is now disarmed')
                 self._armed = False
                 self._led.clear_led()

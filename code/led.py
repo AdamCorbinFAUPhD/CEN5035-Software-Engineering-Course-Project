@@ -60,8 +60,8 @@ class LED:
         self.clear_led()
         self._logger.debug('LED object created')
 
-    def clear_led(self):
-        self._logger.debug('Clearing LED')
+    def clear_led(self, debug: bool = True):
+        if debug: self._logger.debug('Clearing LED')
         self.enabled = False
         self._red_off()
         self._green_off()
@@ -102,7 +102,7 @@ class LED:
         :return:
         """
 
-        self.clear_led()
+        self.clear_led(debug)
 
         self.enabled = True
         self.color = color
@@ -128,13 +128,14 @@ class LED:
             self._green_on()
             if debug: self._logger.debug('Setting LED to RED_GREEN')
 
-    def flash_led(self, color: LEDColor, flash_count=0, period=0.1, stay_on=False, keep_previous_state=True):
+    def flash_led(self, color: LEDColor, flash_count=0, period=0.1, stay_on=False, keep_previous_state=True, debug: bool = True):
         """
         This method will have the ability to control the state of the led along with adding some animation of turning
         the led on & off to represent a flash. There might be a case where flashing is desired where the led does
         not need to remain on. The flash will have a period of .4 sec. Because of the flashing this call is blacking
         and will delay the program
 
+        :param debug: A way to force the debug on or off
         :param keep_previous_state: If there was a led state enabled before, be sure to reset it back to that before
         :param period: duration the flash in seconds
         :param stay_on: The desire to leave the LED on in the event of a flashing animation
@@ -144,20 +145,20 @@ class LED:
         """
         last_color = self.color
         last_enable = self.enabled
-        self._logger.debug('LED - Previous state= ', last_color, last_enable)
+        if debug: self._logger.debug('LED - Previous state= ' + last_color.name + " " + str(last_enable))
         self.clear_led()
-        self._logger.debug('Flashing LED')
+        if debug: self._logger.debug('Flashing LED')
         for _ in range(flash_count):
-            self.turn_on(color)
+            self.turn_on(color, debug)
             sleep(period)
-            self.turn_off(color)
+            self.turn_off(color, debug)
             sleep(period)
 
         if stay_on:
-            self.turn_on(color)
+            self.turn_on(color, debug)
 
         if keep_previous_state and last_enable:
-            self.turn_on(last_color)
+            self.turn_on(last_color, debug)
 
     def _red_on(self):
         """
