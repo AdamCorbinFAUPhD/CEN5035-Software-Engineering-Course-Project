@@ -44,6 +44,11 @@ the timeout expires
 the timeout expires
 4. Verify that when a pin in incorrectly entered that the led flashes red 5x
 5. Verify the system can be disarmed on a correct pin entry by verifying that the green LED flashes green and then turns off.
+6. Verify that when the system is armed and the PIR Sensor detects motion then the LED starts flashing red causing an active alarm
+7. Verify that when the system has an active alarm where the LED is flashing red that when the user enters in the correct pin
+the system will deactivate the alarm, disarm the system, and flash green 5 times confirming a correct pin
+8. Verify that when the system has an active alarm where the LED is flashing red that when the user enters in 
+an incorrect pin, the yellow light flashes confirming an invalid pin and goes back to flashing red
 """
 
 
@@ -159,7 +164,6 @@ class System:
             else:
                 # Added to not eat up the processing. This give a max of .5 delay when the alarm can be started
                 sleep(.5)
-
 
     def _process_pir_event(self, pir_event: PIREvent):
         """
@@ -316,7 +320,17 @@ class System:
             self.system_locked = True
             self._logger.info('System is locked')
         else:
+            turn_alarm_back_on = False
+            # Handing the case where the alarm is active and we need to notify the user they entered in an incorrect pin
+            # This case will disable the alarm while the led will flash yellow, then will turn the alarm back on
+            if self.alarm_active:
+                self.alarm_active = False
+                turn_alarm_back_on = True
+                sleep(.5)
             self._led.flash_led(color=LEDColor.YELLOW, flash_count=2)
+            if turn_alarm_back_on:
+                self.alarm_active = True
+
             self.reset_user_entry()
             self._logger.info('Failed to enter the pin correctly')
         return False
