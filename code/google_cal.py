@@ -13,6 +13,8 @@ home and they might have a false positive . A way to combat this will be introdu
 does leave some room for error if someone forgets to tag the meeting that the system should be monitoring.
 3. Complete separate alarm events - Another option would be to completely separate the events in their own type of meeting
 to signify only for monitoring.
+4. First and Last meetings - Automatically create a range where the system will be active the start of the first meeting
+till the end of the last meeting. This still has holes since some meetings might take place at the home of the system owner.
 
 Due to the time constraints we will be using 1, for our purposes to show that we can interact with the Google Calender
 
@@ -30,10 +32,16 @@ We start by using this tutorial on how to
 
 """
 
+# TODO - Create API to get latests events with start and stop times
+# TODO - Create API to check to see if an event is currently running and when the end time is
+
 from __future__ import print_function
 import datetime
+from datetime import datetime
 import pickle
 import os.path
+
+import pytz
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
@@ -41,27 +49,52 @@ from google.auth.transport.requests import Request
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 
+
 def main():
     """Shows basic usage of the Google Calendar API.
     Prints the start and name of the next 10 events on the user's calendar.
     """
     service = get_api_service()
 
-
     # Call the Calendar API
-    now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+    now = datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
     print('Getting the upcoming 10 events')
     events_result = service.events().list(calendarId='primary', timeMin=now,
-                                        maxResults=10, singleEvents=True,
-                                        orderBy='startTime').execute()
+                                          maxResults=10, singleEvents=True,
+                                          orderBy='startTime').execute()
     events = events_result.get('items', [])
 
     if not events:
         print('No upcoming events found.')
     for event in events:
-        print(event)
+        # print(event)
         start = event['start'].get('dateTime', event['start'].get('date'))
-        print(start, event['summary'])
+        end = event['end'].get('dateTime', event['end'].get('date'))
+        print(start, end, event['summary'])
+        res = should_system_be_armed(start, end)
+        if res:
+            print("We should be armed now!")
+        else:
+            print("We should not be armed")
+
+
+def should_system_be_armed(event_start_str, event_end_str):
+    """
+    This function will convert the start and end string iso times, to date times. The it will check to see if current
+    falls between the start and end times. If so True will be returned, otherwise False will be returned
+
+    :param event_start_str: IOS time that will be converted to seconds
+    :param event_end_str: IOS time that will be converted to seconds
+    :return:
+    """
+    org_dt = datetime(1970, 1, 1, tzinfo=pytz.utc)
+    start_time_in_sec = (datetime.fromisoformat(event_start_str) - org_dt).total_seconds()
+    end_time_in_sec = (datetime.fromisoformat(event_end_str) - org_dt).total_seconds()
+    now = datetime.now()
+    now = now.replace(tzinfo=pytz.timezone('US/Eastern'))
+    current_time_in_sec = (now - org_dt).total_seconds()
+
+    return True if start_time_in_sec < current_time_in_sec < end_time_in_sec  else False
 
 
 def get_api_service():
