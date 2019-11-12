@@ -140,8 +140,10 @@ class System:
             # start the timer for the first keypress and reset the user entry
             if keypress_event == "#":
                 self.reset_user_entry()
+                self._logger.debug('# entered, passcode reset')
             else:
                 self._user_pin_entry += keypress_event
+                self._logger.debug('current pass code:' + self._user_pin_entry)
                 # Check for success, we will only check for valid entry when the sizes are the same
                 if len(self._user_pin_entry) == len(self._pin):
                     self._arm(self._user_pin_entry)

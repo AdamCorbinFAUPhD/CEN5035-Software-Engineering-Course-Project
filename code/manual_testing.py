@@ -16,6 +16,8 @@ class ManualTesting:
 
     @staticmethod
     def print_actions():
+        print("")
+        print("")
         print("Actions to simulate:")
         print("00 - List actions")
         print("11 - Send PIR Rising event")
@@ -26,6 +28,7 @@ class ManualTesting:
         print("# Send '#' Keypad event")
         print("20 - Clear LED")
         print("30 - System status")
+        print("")
 
     def run(self):
         while True:
@@ -47,7 +50,7 @@ class ManualTesting:
                 or user_entry == "5" or user_entry == "6" or user_entry == "7" or user_entry == "8" \
                 or user_entry == "9" or user_entry == "#":
             print("Sending key event: ", user_entry)
-            self.system.keypad.keypress_queue.put(user_entry)
+            self.system.keypad.keypress_queue.put(user_entry[0])
         elif user_entry == "20":
             print("Clearing LED")
             self.system.led.clear_led()
