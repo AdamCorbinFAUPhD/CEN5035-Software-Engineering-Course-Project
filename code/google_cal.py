@@ -72,7 +72,7 @@ class Calendar:
                 self._logger.info("Calendar event starting, arming system.")
                 self._arming_action_taken = True
                 return True, True
-            elif not self._disarm_action_taken and self._after_event():
+            elif not self._disarm_action_taken and self._after_event(end):
                 self._logger.info("Calendar event ending, disarming system.")
                 self._disarm_action_taken = True
                 self._current_event = None
