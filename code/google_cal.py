@@ -94,7 +94,7 @@ class Calendar:
         event = events_result.get('items', [])
         if event and self._current_event is not event:
             self._logger.info("New calendar event")
-            self._current_event = event
+            self._current_event = event[0]
             self._arming_action_taken = False
             self._disarm_action_taken = False
 
