@@ -1,18 +1,21 @@
 """
 This module is intended to have a human manually send events into the system. This will help test the system remotely
 """
-from time import sleep
+import time
+from threading import Timer
 
+from pir_event import PIREvent, PirEventType
 from system import System
 
 
 class ManualTesting:
     def __init__(self):
+        Timer(10, self.run, ()).start() # Wait for the system to finish initializing
         self.system = System()
         self.system.run()
-        sleep(10)  # Wait for the system to finish initializing
 
-    def print_actions(self):
+    @staticmethod
+    def print_actions():
         print("Actions to simulate:")
         print("00 - List actions")
         print("11 - Send PIR Rising event")
@@ -26,6 +29,7 @@ class ManualTesting:
 
     def run(self):
         while True:
+            self.print_actions()
             self.get_and_process_user_entry()
 
     def get_and_process_user_entry(self):
@@ -34,13 +38,19 @@ class ManualTesting:
         if user_entry == "00":
             self.print_actions()
         elif user_entry == "11":
-            pass
+            print("Sending Rising event")
+            self.system.pir_sensor.event_queue.put(PIREvent(time=time.time(), event_type=PirEventType.rising))
+        elif user_entry == "12":
+            print("Sending Falling event")
+            self.system.pir_sensor.event_queue.put(PIREvent(time=time.time(), event_type=PirEventType.falling))
         elif user_entry == "0" or user_entry == "1" or user_entry == "2" or user_entry == "3" or user_entry == "4" \
                 or user_entry == "5" or user_entry == "6" or user_entry == "7" or user_entry == "8" \
                 or user_entry == "9" or user_entry == "#":
-            pass
+            print("Sending key event: ", user_entry)
+            self.system.keypad.keypress_queue.put(user_entry)
         elif user_entry == "20":
-            pass
+            print("Clearing LED")
+            self.system.led.clear_led()
         elif user_entry == "30":
             print("Armed: ", self.system.is_armed())
             print("LED Enabled: ", self.system.led.enabled)
