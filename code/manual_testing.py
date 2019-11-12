@@ -10,7 +10,12 @@ from system import System
 
 class ManualTesting:
     def __init__(self):
-        Timer(10, self.run, ()).start() # Wait for the system to finish initializing
+        """
+        You will find that when testing using the manual test you will get messages from the system that might mix
+        between the manual testing output. Thats because we have multiple treads going on at the same time. No clean
+        way around this but just a heads up.
+        """
+        Timer(10, self.run, ()).start()  # Wait for the system to finish initializing
         self.system = System()
         self.system.run()
 
