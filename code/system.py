@@ -6,11 +6,11 @@ from sys import exit
 import json
 from time import time, sleep
 
-from code.keypad import Keypad
-from code.led import LED, LEDColor
-from code.pir_event import PIREvent, PirEventType
-from code.pir_sensor import PirSensor
-from code.google_cal import Calendar
+from keypad import Keypad
+from led import LED, LEDColor
+from pir_event import PIREvent, PirEventType
+from pir_sensor import PirSensor
+from google_cal import Calendar
 
 """
 # Arming the system
@@ -106,10 +106,10 @@ class System:
             exit(1)
 
         # Create the sub system items that the main system will monitor and control
-        self._keypad = Keypad(self._logger)
-        self._led = LED(self._logger)
-        self._pir_sensor = PirSensor(self._logger)
-        self._calendar = Calendar()
+        self.keypad = Keypad(self._logger)
+        self.led = LED(self._logger)
+        self.pir_sensor = PirSensor(self._logger)
+        self.calendar = Calendar()
 
     def run(self):
         """
@@ -163,9 +163,9 @@ class System:
         """
         while True:
             if self.alarm_active:
-                self._led.turn_on(color=LEDColor.RED, debug=False)
+                self.led.turn_on(color=LEDColor.RED, debug=False)
                 sleep(.1)
-                self._led.turn_off(color=LEDColor.RED, debug=False)
+                self.led.turn_off(color=LEDColor.RED, debug=False)
                 sleep(.1)
             else:
                 # Added to not eat up the processing. This give a max of .5 delay when the alarm can be started
@@ -209,7 +209,7 @@ class System:
                 Monitor if the system is locked. When locked all keypress are ignored. After the 5min timer is up then
                 the time is reset and the system is unlocked
                 """
-                keypress_event = self._keypad.keypress_queue.get_nowait()
+                keypress_event = self.keypad.keypress_queue.get_nowait()
                 if not self.system_locked:
                     self._process_keypress_event(keypress_event)
                 else:
@@ -217,7 +217,7 @@ class System:
                     if time() - self._lock_time > self._lockout_duration:
                         self.system_locked = False
                         self._invalid_entry_count = 0
-                        self._led.turn_off(LEDColor.RED)
+                        self.led.turn_off(LEDColor.RED)
 
             except queue.Empty:
                 pass
@@ -228,7 +228,7 @@ class System:
             needed to handle the normal case when no event is in the queue
             """
             try:
-                pir_event = self._pir_sensor.event_queue.get_nowait()
+                pir_event = self.pir_sensor.event_queue.get_nowait()
                 self._process_pir_event(pir_event)
             except queue.Empty:
                 pass
@@ -292,7 +292,7 @@ class System:
         Thread that checks the google calendar once a second and takes action as appropriate.
         """
         while self._running:
-            res = self._calendar.check_calendar()
+            res = self.calendar.check_calendar()
             if res[0]:
                 if res[1] and not self._armed:
                     self._arm(self._pin)
@@ -323,8 +323,8 @@ class System:
             self._logger.info('System is now armed')
             self.reset_user_entry()
             self._invalid_entry_count = 0
-            self._led.flash_led(color=LEDColor.GREEN, flash_count=5)
-            self._led.turn_on(color=LEDColor.BLUE)
+            self.led.flash_led(color=LEDColor.GREEN, flash_count=5)
+            self.led.turn_on(color=LEDColor.BLUE)
             Timer(self._arm_time_delay, self._set_arm_after_delay, ()).start()
             return True
         else:
@@ -333,8 +333,8 @@ class System:
     def invalid_pin_entry(self):
         self._invalid_entry_count += 1
         if self._invalid_entry_count > self._max_invalid_entry_before_system_lock:
-            self._led.flash_led(color=LEDColor.YELLOW, flash_count=5)
-            self._led.turn_on(color=LEDColor.RED)
+            self.led.flash_led(color=LEDColor.YELLOW, flash_count=5)
+            self.led.turn_on(color=LEDColor.RED)
             self._lock_time = time()
             self.system_locked = True
             self._logger.info('System is locked')
@@ -346,7 +346,7 @@ class System:
                 self.alarm_active = False
                 turn_alarm_back_on = True
                 sleep(.5)
-            self._led.flash_led(color=LEDColor.YELLOW, flash_count=2)
+            self.led.flash_led(color=LEDColor.YELLOW, flash_count=2)
             if turn_alarm_back_on:
                 self.alarm_active = True
 
@@ -369,8 +369,8 @@ class System:
                 self.reset_user_entry()
                 self._logger.info('System is now disarmed')
                 self._armed = False
-                self._led.clear_led()
-                self._led.flash_led(color=LEDColor.GREEN, flash_count=5)
+                self.led.clear_led()
+                self.led.flash_led(color=LEDColor.GREEN, flash_count=5)
                 self._invalid_entry_count = 0
 
                 return True
