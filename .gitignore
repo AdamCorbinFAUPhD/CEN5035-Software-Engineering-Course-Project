@@ -1,3 +1,5 @@
 code/.idea
 code/venv
 *.log
+.idea
+venv

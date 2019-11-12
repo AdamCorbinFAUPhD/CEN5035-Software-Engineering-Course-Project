@@ -42,6 +42,7 @@ import pickle
 import os.path
 
 import pytz
+import logging
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
@@ -50,75 +51,124 @@ from google.auth.transport.requests import Request
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 
 
-def main():
-    """Shows basic usage of the Google Calendar API.
-    Prints the start and name of the next 10 events on the user's calendar.
-    """
-    service = get_api_service()
+class Calendar:
+    def __init__(self):
+        self._current_event = None
+        self._logger = logging.getLogger('AlarmSystem.calendar')
+        self._arming_action_taken = False
+        self._disarm_action_taken = False
 
-    # Call the Calendar API
-    now = datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
-    print('Getting the upcoming 10 events')
-    events_result = service.events().list(calendarId='primary', timeMin=now,
-                                          maxResults=10, singleEvents=True,
-                                          orderBy='startTime').execute()
-    events = events_result.get('items', [])
-
-    if not events:
-        print('No upcoming events found.')
-    for event in events:
-        # print(event)
-        start = event['start'].get('dateTime', event['start'].get('date'))
-        end = event['end'].get('dateTime', event['end'].get('date'))
-        print(start, end, event['summary'])
-        res = should_system_be_armed(start, end)
-        if res:
-            print("We should be armed now!")
+    def check_calendar(self):
+        """
+        Check the google calendar for the next event and determine if the system should be armed.
+        :return: returns a tuple containing two bool values. The first is if an action needs to be taken, the second
+        is if it is an arming action
+        """
+        if self._current_event:
+            start = self._current_event['start'].get('dateTime', self._current_event['start'].get('date'))
+            end = self._current_event['end'].get('dateTime', self._current_event['end'].get('date'))
+            print(start, end, self._current_event['summary'])
+            if not self._arming_action_taken and self._should_system_be_armed(start, end):
+                self._logger.info("Calendar event starting, arming system.")
+                self._arming_action_taken = True
+                return True, True
+            elif not self._disarm_action_taken and self._after_event():
+                self._logger.info("Calendar event ending, disarming system.")
+                self._disarm_action_taken = True
+                self._current_event = None
+                return True, False
         else:
-            print("We should not be armed")
+            self._get_current_event()
+        return False, False
+
+    def _get_current_event(self):
+        """
+        Get the event with the closest start time and store it in the current event
+        """
+        # Call the Calendar API
+        service = self._get_api_service()
+        now = datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
+        events_result = service.events().list(calendarId='primary', timeMin=now,
+                                              maxResults=1, singleEvents=True,
+                                              orderBy='startTime').execute()
+        event = events_result.get('items', [])
+        if event and self._current_event is not event:
+            self._logger.info("New calendar event")
+            self._current_event = event
+            self._arming_action_taken = False
+            self._disarm_action_taken = False
+
+    @staticmethod
+    def _before_event(event_start_str):
+        """
+        Function for checking if the current time is before the event start time.
+        :param event_start_str: The start time of the event
+        :return: bool
+        """
+        org_dt = datetime(1970, 1, 1, tzinfo=pytz.utc)
+        start_time_in_sec = (datetime.fromisoformat(event_start_str) - org_dt).total_seconds()
+        now = datetime.now()
+        now = now.replace(tzinfo=pytz.timezone('US/Eastern'))
+        current_time_in_sec = (now - org_dt).total_seconds()
+        return True if start_time_in_sec > current_time_in_sec else False
+
+    @staticmethod
+    def _after_event(event_end_str):
+        """
+        Function for checking if the current time is past the given event end time.
+        :param event_end_str: The end time of the event
+        :return: bool
+        """
+        org_dt = datetime(1970, 1, 1, tzinfo=pytz.utc)
+        end_time_in_sec = (datetime.fromisoformat(event_end_str) - org_dt).total_seconds()
+        now = datetime.now()
+        now = now.replace(tzinfo=pytz.timezone('US/Eastern'))
+        current_time_in_sec = (now - org_dt).total_seconds()
+        return True if end_time_in_sec < current_time_in_sec else False
 
 
-def should_system_be_armed(event_start_str, event_end_str):
-    """
-    This function will convert the start and end string iso times, to date times. The it will check to see if current
-    falls between the start and end times. If so True will be returned, otherwise False will be returned
+    @staticmethod
+    def _should_system_be_armed(event_start_str, event_end_str):
+        """
+        This function will convert the start and end string iso times, to date times. The it will check to see if current
+        falls between the start and end times. If so True will be returned, otherwise False will be returned
 
-    :param event_start_str: IOS time that will be converted to seconds
-    :param event_end_str: IOS time that will be converted to seconds
-    :return:
-    """
-    org_dt = datetime(1970, 1, 1, tzinfo=pytz.utc)
-    start_time_in_sec = (datetime.fromisoformat(event_start_str) - org_dt).total_seconds()
-    end_time_in_sec = (datetime.fromisoformat(event_end_str) - org_dt).total_seconds()
-    now = datetime.now()
-    now = now.replace(tzinfo=pytz.timezone('US/Eastern'))
-    current_time_in_sec = (now - org_dt).total_seconds()
+        :param event_start_str: IOS time that will be converted to seconds
+        :param event_end_str: IOS time that will be converted to seconds
+        :return:
+        """
+        org_dt = datetime(1970, 1, 1, tzinfo=pytz.utc)
+        start_time_in_sec = (datetime.fromisoformat(event_start_str) - org_dt).total_seconds()
+        end_time_in_sec = (datetime.fromisoformat(event_end_str) - org_dt).total_seconds()
+        now = datetime.now()
+        now = now.replace(tzinfo=pytz.timezone('US/Eastern'))
+        current_time_in_sec = (now - org_dt).total_seconds()
+        return True if start_time_in_sec < current_time_in_sec < end_time_in_sec else False
 
-    return True if start_time_in_sec < current_time_in_sec < end_time_in_sec  else False
+    @staticmethod
+    def _get_api_service():
+        """
+        Setup the google api service for use in retrieving the calendars.
+        :return:
+        """
+        creds = None
+        # The file token.pickle stores the user's access and refresh tokens, and is
+        # created automatically when the authorization flow completes for the first
+        # time.
+        if os.path.exists('token.pickle'):
+            with open('token.pickle', 'rb') as token:
+                creds = pickle.load(token)
+        # If there are no (valid) credentials available, let the user log in.
+        if not creds or not creds.valid:
+            if creds and creds.expired and creds.refresh_token:
+                creds.refresh(Request())
+            else:
+                flow = InstalledAppFlow.from_client_secrets_file(
+                    'credentials.json', SCOPES)
+                creds = flow.run_local_server(port=0)
+            # Save the credentials for the next run
+            with open('token.pickle', 'wb') as token:
+                pickle.dump(creds, token)
+        service = build('calendar', 'v3', credentials=creds)
+        return service
 
-
-def get_api_service():
-    creds = None
-    # The file token.pickle stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first
-    # time.
-    if os.path.exists('token.pickle'):
-        with open('token.pickle', 'rb') as token:
-            creds = pickle.load(token)
-    # If there are no (valid) credentials available, let the user log in.
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials.json', SCOPES)
-            creds = flow.run_local_server(port=0)
-        # Save the credentials for the next run
-        with open('token.pickle', 'wb') as token:
-            pickle.dump(creds, token)
-    service = build('calendar', 'v3', credentials=creds)
-    return service
-
-
-if __name__ == '__main__':
-    main()

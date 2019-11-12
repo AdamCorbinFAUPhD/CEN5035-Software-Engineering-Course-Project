@@ -6,10 +6,11 @@ from sys import exit
 import json
 from time import time, sleep
 
-from keypad import Keypad
-from led import LED, LEDColor
-from pir_event import PIREvent, PirEventType
-from pir_sensor import PirSensor
+from code.keypad import Keypad
+from code.led import LED, LEDColor
+from code.pir_event import PIREvent, PirEventType
+from code.pir_sensor import PirSensor
+from code.google_cal import Calendar
 
 """
 # Arming the system
@@ -77,6 +78,7 @@ class System:
         self._max_invalid_entry_before_system_lock = 4
         self.alarm_active = False
 
+        # variable that tracks if a user modified the current state of the system
         # System needs to be running
         self._running = False
         # list to keep track of worker threads
@@ -87,7 +89,7 @@ class System:
         self._threads.append(alarm_t)
 
         # Setup logging for this module.
-        self._logger = logging.getLogger('Alarm System')
+        self._logger = logging.getLogger('AlarmSystem')
         ch = logging.StreamHandler()
         ch.setLevel(logging.DEBUG)
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(threadName)s - %(levelname)s - %(message)s')
@@ -107,6 +109,7 @@ class System:
         self._keypad = Keypad(self._logger)
         self._led = LED(self._logger)
         self._pir_sensor = PirSensor(self._logger)
+        self._calendar = Calendar()
 
     def run(self):
         """
@@ -117,6 +120,9 @@ class System:
             sensor_t = Thread(target=self._sensor_thread, args=(), name="Sensor_Thread")
             self._threads.append(sensor_t)
             sensor_t.start()
+            calendar_t = Thread(target=self._calendar_thread, args=(), name="Calendar_Thread")
+            self._threads.append(calendar_t)
+            calendar_t.start()
             self._main_thread()
 
     def _process_keypress_event(self, keypress_event: str):
@@ -189,7 +195,7 @@ class System:
 
     def _sensor_thread(self):
         """
-        Thread for checking the sensor inputs
+        Thread for checking the sensor inputs.
         """
         self._logger.debug('starting sensor thread')
         while self._running:
@@ -280,6 +286,19 @@ class System:
             self._logger.error('{}'.format(e))
         finally:
             connection.close()
+
+    def _calendar_thread(self):
+        """
+        Thread that checks the google calendar once a second and takes action as appropriate.
+        """
+        while self._running:
+            res = self._calendar.check_calendar()
+            if res[0]:
+                if res[1] and not self._armed:
+                    self._arm(self._pin)
+                elif not res[1] and self._armed:
+                    self._disarm(self._pin)
+            sleep(1)
 
     def _join_threads(self):
         """
