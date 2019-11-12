@@ -67,7 +67,6 @@ class Calendar:
         if self._current_event:
             start = self._current_event['start'].get('dateTime', self._current_event['start'].get('date'))
             end = self._current_event['end'].get('dateTime', self._current_event['end'].get('date'))
-            print(start, end, self._current_event['summary'])
             if not self._arming_action_taken and self._should_system_be_armed(start, end):
                 self._logger.info("Calendar event starting, arming system.")
                 self._arming_action_taken = True
