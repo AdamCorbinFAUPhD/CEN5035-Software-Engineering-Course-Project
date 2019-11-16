@@ -11,6 +11,7 @@ from led import LED, LEDColor
 from pir_event import PIREvent, PirEventType
 from pir_sensor import PirSensor
 from google_cal import Calendar
+from watson_processing import Watson
 
 """
 # Arming the system
@@ -110,6 +111,7 @@ class System:
         self.led = LED(self._logger)
         self.pir_sensor = PirSensor(self._logger)
         self.calendar = Calendar()
+        self.watson = Watson()
 
     def run(self):
         """
@@ -186,6 +188,7 @@ class System:
 
         if pir_event.event_type == PirEventType.falling:
             self._logger.debug('Falling event occurred')
+            self.watson.send_movement_falling()
         elif pir_event.event_type == PirEventType.rising:
             if self.is_armed():
                 # First event that has occurred when armed, activate alarm thread
@@ -193,6 +196,7 @@ class System:
                     self.alarm_active = True
                     self._logger.info('Alarm has been activated')
             self._logger.debug('Rising event occurred')
+            self.watson.send_movement_rising()
         pass
 
     def _sensor_thread(self):
