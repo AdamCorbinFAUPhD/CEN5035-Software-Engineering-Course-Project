@@ -31,11 +31,6 @@ except ImportError:
     import wiotp.sdk.device
 
 
-def interrupt_handler(signal, frame):
-    client.disconnect()
-    sys.exit(0)
-
-
 def command_processor(cmd):
     global interval
     print("Command received: %s" % cmd.data)
@@ -56,7 +51,7 @@ def command_processor(cmd):
 
 class Watson:
     def __init__(self):
-        signal.signal(signal.SIGINT, interrupt_handler)
+        signal.signal(signal.SIGINT, self.interrupt_handler)
         self.client = None
         try:
             options = wiotp.sdk.device.parseEnvVars()
@@ -68,6 +63,10 @@ class Watson:
             print(str(e))
             sys.exit(1)
 
+    def interrupt_handler(self, signal, frame):
+        self.client.disconnect()
+        sys.exit(0)
+
     def send_movement_rising(self):
         message_data = {"movement_rising": True}
         self.client.publishEvent("MOVEMENT", "json", message_data)
@@ -75,4 +74,12 @@ class Watson:
     def send_movement_falling(self):
         message_data = {"movement_rising": False}
         self.client.publishEvent("MOVEMENT", "json", message_data)
+
+    def send_alarm_activated(self):
+        message_data = {"alarm_activation": True}
+        self.client.publishEvent("ALARM_ACTIVATION", "json", message_data)
+
+    def send_alarm_deactivated(self):
+        message_data = {"alarm_activation": False}
+        self.client.publishEvent("ALARM_ACTIVATION", "json", message_data)
 

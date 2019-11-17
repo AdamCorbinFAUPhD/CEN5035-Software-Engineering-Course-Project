@@ -195,6 +195,7 @@ class System:
                 if not self.alarm_active:
                     self.alarm_active = True
                     self._logger.info('Alarm has been activated')
+                    self.watson.send_alarm_activated()
             self._logger.debug('Rising event occurred')
             self.watson.send_movement_rising()
         pass
@@ -372,6 +373,7 @@ class System:
                 if self.alarm_active:
                     self.alarm_active = False
                     self._logger.info('Alarm turned off')
+                    self.watson.send_alarm_deactivated()
                 self.reset_user_entry()
                 self._logger.info('System is now disarmed')
                 self._armed = False
