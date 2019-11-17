@@ -15,7 +15,7 @@ from watson_processing import Watson
 
 """
 # Arming the system
-To arm the system, press # the system PIN. The system will allow the user to enter their pin within
+To _arm the system, press # the system PIN. The system will allow the user to enter their pin within
 10 seconds of first keypress. Otherwise the pin will get cleared to allow the user to re-enter.  On successful arming of 
 the system the LED will flash green 5 times and the LED will be set to blue. When arming the system, the system needs to 
 give at least 1 min for the home owner to leave the house before it sensing becomes active
@@ -48,7 +48,7 @@ the timeout expires
 5. Verify the system can be disarmed on a correct pin entry by verifying that the green LED flashes green and then turns off.
 6. Verify that when the system is armed and the PIR Sensor detects motion then the LED starts flashing red causing an active alarm
 7. Verify that when the system has an active alarm where the LED is flashing red that when the user enters in the correct pin
-the system will deactivate the alarm, disarm the system, and flash green 5 times confirming a correct pin
+the system will deactivate the alarm, _disarm the system, and flash green 5 times confirming a correct pin
 8. Verify that when the system has an active alarm where the LED is flashing red that when the user enters in 
 an incorrect pin, the yellow light flashes confirming an invalid pin and goes back to flashing red
 """
@@ -61,7 +61,7 @@ class System:
         # python does not have any other way to differentiate between public and private. This same annotation is also
         # used for private functions
         # The 'self' indicates that this variable is an instance variable much like 'this' is used in other languages.
-        self._armed = False
+        self.is_armed = False
         # When arming a system, the system needs to give a delay in order to for the home owner to leave the house
         # without tripping the alarm system
         self._arm_time_delay = 5  # 1 * 60
@@ -148,12 +148,12 @@ class System:
                 self._logger.debug('current pass code:' + self._user_pin_entry)
                 # Check for success, we will only check for valid entry when the sizes are the same
                 if len(self._user_pin_entry) == len(self._pin):
-                    self.arm(self._user_pin_entry)
+                    self._arm(self._user_pin_entry)
         else:
             self._user_pin_entry += keypress_event
             self._logger.debug('current pass code:' + self._user_pin_entry)
             if len(self._user_pin_entry) == len(self._pin):
-                self.disarm(self._user_pin_entry)
+                self._disarm(self._user_pin_entry)
 
     def reset_user_entry(self):
         self._user_pin_entry = ""
@@ -276,11 +276,11 @@ class System:
             data = json.loads(bytearray(connection.recv(1024)).decode('utf-8'))
             if data is not None and isinstance(data, dict) and 'func' in data:
                 func = data['func']
-                if func == 'arm' and 'pin' in data and isinstance(data['pin'], str):
-                    result = self.arm(data['pin'])
+                if func == '_arm' and 'pin' in data and isinstance(data['pin'], str):
+                    result = self._arm(data['pin'])
                     connection.send(json.dumps({'result': result}).encode('utf-8'))
-                elif func == 'disarm' and 'pin' in data and isinstance(data['pin'], str):
-                    result = self.disarm(data['pin'])
+                elif func == '_disarm' and 'pin' in data and isinstance(data['pin'], str):
+                    result = self._disarm(data['pin'])
                     connection.send(json.dumps({'result': result}).encode('utf-8'))
                 elif func == 'set_pin' and 'current_pin' in data and isinstance(data['current_pin'], str) \
                         and 'new_pin' in data and isinstance(data['new_pin'], str):
@@ -301,10 +301,10 @@ class System:
         while self._running:
             res = self.calendar.check_calendar()
             if res[0]:
-                if res[1] and not self._armed:
-                    self.arm(self._pin)
-                elif not res[1] and self._armed:
-                    self.disarm(self._pin)
+                if res[1] and not self.is_armed:
+                    self._arm(self._pin)
+                elif not res[1] and self.is_armed:
+                    self._disarm(self._pin)
             sleep(1)
 
     def _join_threads(self):
@@ -317,16 +317,16 @@ class System:
         self._logger.debug('threads joined')
 
     def _set_arm_after_delay(self):
-        self._armed = True
+        self.is_armed = True
 
-    def arm(self, pin: str):
+    def _arm(self, pin: str):
         # to create function documentation in pycharm simple type '"' three times and hit enter.
         """
         Arms the system if the system is not armed and the pin is correct.
         Assumption: The pin entry is the same length as the given pin. Upon a failed check the user entry is reset
         :param pin: the system pin
         """
-        if not self._armed and self._check_pin(pin):
+        if not self.is_armed and self._check_pin(pin):
             self._logger.info('System is now armed')
             self.reset_user_entry()
             self._invalid_entry_count = 0
@@ -361,13 +361,13 @@ class System:
             self._logger.info('Failed to enter the pin correctly')
         return False
 
-    def disarm(self, pin: str):
+    def _disarm(self, pin: str):
         """
         Disarms the system if the system is armed and the pin is correct.
         :param pin: the system pin
         :return:
         """
-        if self._armed:
+        if self.is_armed:
             if self._check_pin(pin):
                 # When the alarm is running, deactivate alarm
                 if self.alarm_active:
@@ -376,7 +376,7 @@ class System:
                     self.watson.send_alarm_deactivated()
                 self.reset_user_entry()
                 self._logger.info('System is now disarmed')
-                self._armed = False
+                self.is_armed = False
                 self.led.clear_led()
                 self.led.flash_led(color=LEDColor.GREEN, flash_count=5)
                 self._invalid_entry_count = 0
@@ -420,7 +420,7 @@ class System:
         Returns the armed status of the system.
         :return: armed
         """
-        return self._armed
+        return self.is_armed
 
 
 # when this .py is called we will create a system object and run it.
