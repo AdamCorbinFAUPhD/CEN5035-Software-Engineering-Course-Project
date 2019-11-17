@@ -9,9 +9,9 @@
 # http://www.eclipse.org/legal/epl-v10.html
 # *****************************************************************************
 
-import time
 import sys
 import signal
+import os
 
 try:
     import wiotp.sdk.device
@@ -54,6 +54,11 @@ class Watson:
         signal.signal(signal.SIGINT, self.interrupt_handler)
         self.client = None
         try:
+            # Setting the env variables
+            os.environ['WIOTP_IDENTITY_ORGID'] = "4j9rx2"
+            os.environ['WIOTP_IDENTITY_DEVICEID'] = "1"
+            os.environ['WIOTP_IDENTITY_TYPEID'] = "RasberryPi"
+            os.environ['WIOTP_AUTH_TOKEN'] = "OZn21rHzjzK2Db+NnT"
             options = wiotp.sdk.device.parseEnvVars()
 
             self.client = wiotp.sdk.device.DeviceClient(options)
