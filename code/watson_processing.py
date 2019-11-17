@@ -1,13 +1,29 @@
 #!/usr/bin/env python
 
-# *****************************************************************************
-# Copyright (c) 2014, 2019 IBM Corporation and other Contributors.
-#
-# All rights reserved. This program and the accompanying materials
-# are made available under the terms of the Eclipse Public License v1.0
-# which accompanies this distribution, and is available at
-# http://www.eclipse.org/legal/epl-v10.html
-# *****************************************************************************
+"""
+# Watson services
+The IBM Watson service has a ton of different things from processing speech to text, text to speech, searching things
+online, and many more. While investigating how Watson could be integrated with the Smart Security system it was found
+that Watson could create time series graphs of events. This complemented the Smart Security system well since we have
+many different events such as movement detection, arming the system, and when the alarm is sounded.
+TODO - insert pictures
+Alarm activation: https://puu.sh/EFxGh/d23fd15fe5.png
+Movement Detection: https://puu.sh/EFxHo/fe27cc55c7.png
+System Armed: https://puu.sh/EFxHE/d7ab793216.png
+
+## Challenges
+Ideally it would be nice to embed these graphs in our user interface but it doesnt look like Watson has the capability
+to share these graphs publicly. The only way you can view them is to be on an authorized email list and you have to
+login to IBM's Watson system.
+
+## Considerations
+For the Smart Security system we considered using voice activation to arm and disarm the system but in the end it seemed
+like a security risk in the event that it didnt function properly or if an unauthorized user found out about the verbal
+pass code. Possibly in the future when Watson can self identify someone based on their void then this could be a great
+feature to add to this Smart Security System
+
+weblink: https://4j9rx2.internetofthings.ibmcloud.com/dashboard/boards/ec987cb4-3d6b-4aa1-bb63-9eeca3412eb6
+"""
 
 import sys
 import signal
