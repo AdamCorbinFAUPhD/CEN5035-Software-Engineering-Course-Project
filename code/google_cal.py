@@ -64,6 +64,8 @@ class Calendar:
         :return: returns a tuple containing two bool values. The first is if an action needs to be taken, the second
         is if it is an arming action
         """
+        # TODO- we should consider getting the current event every time or at least every 30 seconds because the current
+        #  event count change
         if self._current_event:
             start = self._current_event['start'].get('dateTime', self._current_event['start'].get('date'))
             end = self._current_event['end'].get('dateTime', self._current_event['end'].get('date'))
