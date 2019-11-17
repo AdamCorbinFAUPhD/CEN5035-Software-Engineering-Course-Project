@@ -62,12 +62,12 @@ class ManualTesting:
             print("Clearing LED")
             self.system.led.clear_led()
         elif user_entry == "30":
-            print("Armed: ", self.system.is_armed())
+            print("Armed: ", self.system.is_armed)
             print("LED Enabled: ", self.system.led.enabled)
             print("LED Color: ", self.system.led.color.name)
             print("Alarm active: ", self.system.alarm_active)
             print("System Locked: ", self.system.system_locked)
-            print("Armed: ", self.system.is_armed())
+            print("Armed: ", self.system.is_armed)
         elif user_entry == "40":
             self.system.is_armed = True
         elif user_entry == "41":

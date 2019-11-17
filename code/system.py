@@ -138,7 +138,7 @@ class System:
         if time() - self._user_first_key_entry_time > self._pin_entry_max_timeout:
             self.reset_user_entry()
 
-        if not self.is_armed():
+        if not self.is_armed:
             # start the timer for the first keypress and reset the user entry
             if keypress_event == "#":
                 self.reset_user_entry()
@@ -190,7 +190,7 @@ class System:
             self._logger.debug('Falling event occurred')
             self.watson.send_movement_falling()
         elif pir_event.event_type == PirEventType.rising:
-            if self.is_armed():
+            if self.is_armed:
                 # First event that has occurred when armed, activate alarm thread
                 if not self.alarm_active:
                     self.alarm_active = True
