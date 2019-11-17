@@ -148,12 +148,12 @@ class System:
                 self._logger.debug('current pass code:' + self._user_pin_entry)
                 # Check for success, we will only check for valid entry when the sizes are the same
                 if len(self._user_pin_entry) == len(self._pin):
-                    self._arm(self._user_pin_entry)
+                    self.arm(self._user_pin_entry)
         else:
             self._user_pin_entry += keypress_event
             self._logger.debug('current pass code:' + self._user_pin_entry)
             if len(self._user_pin_entry) == len(self._pin):
-                self._disarm(self._user_pin_entry)
+                self.disarm(self._user_pin_entry)
 
     def reset_user_entry(self):
         self._user_pin_entry = ""
@@ -277,10 +277,10 @@ class System:
             if data is not None and isinstance(data, dict) and 'func' in data:
                 func = data['func']
                 if func == 'arm' and 'pin' in data and isinstance(data['pin'], str):
-                    result = self._arm(data['pin'])
+                    result = self.arm(data['pin'])
                     connection.send(json.dumps({'result': result}).encode('utf-8'))
                 elif func == 'disarm' and 'pin' in data and isinstance(data['pin'], str):
-                    result = self._disarm(data['pin'])
+                    result = self.disarm(data['pin'])
                     connection.send(json.dumps({'result': result}).encode('utf-8'))
                 elif func == 'set_pin' and 'current_pin' in data and isinstance(data['current_pin'], str) \
                         and 'new_pin' in data and isinstance(data['new_pin'], str):
@@ -302,9 +302,9 @@ class System:
             res = self.calendar.check_calendar()
             if res[0]:
                 if res[1] and not self._armed:
-                    self._arm(self._pin)
+                    self.arm(self._pin)
                 elif not res[1] and self._armed:
-                    self._disarm(self._pin)
+                    self.disarm(self._pin)
             sleep(1)
 
     def _join_threads(self):
@@ -319,7 +319,7 @@ class System:
     def _set_arm_after_delay(self):
         self._armed = True
 
-    def _arm(self, pin: str):
+    def arm(self, pin: str):
         # to create function documentation in pycharm simple type '"' three times and hit enter.
         """
         Arms the system if the system is not armed and the pin is correct.
@@ -361,7 +361,7 @@ class System:
             self._logger.info('Failed to enter the pin correctly')
         return False
 
-    def _disarm(self, pin: str):
+    def disarm(self, pin: str):
         """
         Disarms the system if the system is armed and the pin is correct.
         :param pin: the system pin

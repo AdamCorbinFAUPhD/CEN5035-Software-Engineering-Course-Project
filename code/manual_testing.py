@@ -33,6 +33,8 @@ class ManualTesting:
         print("# Send '#' Keypad event")
         print("20 - Clear LED")
         print("30 - System status")
+        print("40 - arm the system")
+        print("41 - de-arm the system")
         print("")
 
     def run(self):
@@ -66,10 +68,10 @@ class ManualTesting:
             print("Alarm active: ", self.system.alarm_active)
             print("System Locked: ", self.system.system_locked)
             print("Armed: ", self.system.is_armed())
-        elif user_entry == "":
-            pass
-        elif user_entry == "":
-            pass
+        elif user_entry == "40":
+            self.system.arm()
+        elif user_entry == "41":
+            self.system.disarm()
         elif user_entry == "":
             pass
 
