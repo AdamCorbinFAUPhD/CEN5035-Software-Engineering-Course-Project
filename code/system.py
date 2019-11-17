@@ -51,6 +51,8 @@ the timeout expires
 the system will deactivate the alarm, _disarm the system, and flash green 5 times confirming a correct pin
 8. Verify that when the system has an active alarm where the LED is flashing red that when the user enters in 
 an incorrect pin, the yellow light flashes confirming an invalid pin and goes back to flashing red
+9. Verify that when the calender event starts, that the system becomes armed.
+10. Verify that when the calender event ends, that the system becomes diarmed.
 """
 
 
