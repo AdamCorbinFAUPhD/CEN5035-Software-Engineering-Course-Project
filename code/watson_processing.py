@@ -88,3 +88,11 @@ class Watson:
         message_data = {"alarm_activation": False}
         self.client.publishEvent("ALARM_ACTIVATION", "json", message_data)
 
+    def send_armed(self):
+        message_data = {"ARMED": True}
+        self.client.publishEvent("ARMED", "json", message_data)
+
+    def send_diarmed(self):
+        message_data = {"ARMED": False}
+        self.client.publishEvent("ARMED", "json", message_data)
+

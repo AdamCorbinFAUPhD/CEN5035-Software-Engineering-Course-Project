@@ -318,6 +318,7 @@ class System:
 
     def _set_arm_after_delay(self):
         self.is_armed = True
+        self.watson.send_armed()
 
     def _arm(self, pin: str):
         # to create function documentation in pycharm simple type '"' three times and hit enter.
@@ -377,6 +378,7 @@ class System:
                 self.reset_user_entry()
                 self._logger.info('System is now disarmed')
                 self.is_armed = False
+                self.watson.send_diarmed()
                 self.led.clear_led()
                 self.led.flash_led(color=LEDColor.GREEN, flash_count=5)
                 self._invalid_entry_count = 0
