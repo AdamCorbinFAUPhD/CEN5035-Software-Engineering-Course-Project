@@ -1,7 +1,7 @@
 import subprocess
-import json
 from time import sleep
 from threading import Thread
+import logging
 
 url = 'http://127.0.0.1:8080/0'
 
@@ -15,6 +15,8 @@ VIDEO_TIME = 20
 
 NUM_PHOTOS = 5
 
+module_logger = logging.getLogger('AlarmSystem.calendar')
+
 
 def take_photo():
     """
@@ -24,8 +26,7 @@ def take_photo():
     command = ['curl', '-s', full_url]
     process = subprocess.Popen(command, stdout=subprocess.PIPE)
     out, err = process.communicate()
-    print(out)
-
+    module_logger.info("Photo taken")
 
 def take_alarm_photos():
     """
@@ -60,10 +61,10 @@ def _video_thread():
     command = ['curl', '-s', full_url]
     process = subprocess.Popen(command, stdout=subprocess.PIPE)
     out, err = process.communicate()
-    print(out)
+    module_logger.info("Video started")
     sleep(VIDEO_TIME)
     full_url = url + stop_video_cmd
     command = ['curl', '-s', full_url]
     process = subprocess.Popen(command, stdout=subprocess.PIPE)
     out, err = process.communicate()
-    print(out)
+    module_logger.info("Video completed")
