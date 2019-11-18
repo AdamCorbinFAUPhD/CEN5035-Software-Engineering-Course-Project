@@ -15,7 +15,7 @@ VIDEO_TIME = 20
 
 NUM_PHOTOS = 5
 
-module_logger = logging.getLogger('AlarmSystem.calendar')
+module_logger = logging.getLogger('AlarmSystem.camera')
 
 
 def take_photo():
