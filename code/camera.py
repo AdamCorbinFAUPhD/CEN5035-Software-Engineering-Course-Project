@@ -28,6 +28,7 @@ def take_photo():
     out, err = process.communicate()
     module_logger.info("Photo taken")
 
+
 def take_alarm_photos():
     """
     Takes the number of specified alarm photos. Starts the alarm photos thread.

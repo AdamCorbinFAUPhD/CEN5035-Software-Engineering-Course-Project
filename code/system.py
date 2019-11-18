@@ -1,4 +1,4 @@
-import logging
+ import logging
 import queue
 from threading import Thread, Timer
 import socket
@@ -12,6 +12,7 @@ from pir_event import PIREvent, PirEventType
 from pir_sensor import PirSensor
 from google_cal import Calendar
 from watson_processing import Watson
+import camera
 
 """
 # Arming the system
@@ -167,6 +168,8 @@ class System:
         This is indented to be run in a thread and only run when alram is active
         :return:
         """
+        camera.take_video()
+        camera.take_alarm_photos()
         while True:
             if self.alarm_active:
                 self.led.turn_on(color=LEDColor.RED, debug=False)
@@ -288,7 +291,12 @@ class System:
                         and 'new_pin' in data and isinstance(data['new_pin'], str):
                     result = self._set_pin(data['current_pin'], data['new_pin'])
                     connection.send(json.dumps({'result': result}).encode('utf-8'))
-                # TODO: other functions including photo stuff.
+                elif func == 'take_photo':
+                    camera.take_photo()
+                    connection.send(json.dumps({'result': True}).encode('utf-8'))
+                elif func == 'take_video':
+                    camera.take_video()
+                    connection.send(json.dumps({'result': True}).encode('utf-8'))
         except socket.error as e:
             self._logger.error('{}'.format(e))
         except json.JSONDecodeError as e:
