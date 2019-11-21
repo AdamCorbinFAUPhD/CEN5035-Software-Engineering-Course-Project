@@ -14,8 +14,9 @@ app = Flask(__name__)
 @app.route("/")
 def status():
     armed = system_obj.is_armed
-
-    return render_template("index.html", time=get_time(), armed=armed)
+    led_color = system_obj.led.color.name
+    led_enabled = system_obj.led.enabled
+    return render_template("index.html", time=get_time(), armed=armed, led_color=led_color, led_enabled=led_enabled)
 
 
 def get_time():
