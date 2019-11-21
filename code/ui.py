@@ -1,8 +1,6 @@
 import urllib
 from time import time, sleep
-
-from flask import Flask, render_template, request
-
+from flask import Flask, render_template, request, url
 from system import System
 
 system_obj = System()
