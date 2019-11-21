@@ -32,9 +32,6 @@ We start by using this tutorial on how to
 
 """
 
-# TODO - Create API to get latests events with start and stop times
-# TODO - Create API to check to see if an event is currently running and when the end time is
-
 from __future__ import print_function
 import datetime
 from datetime import datetime
@@ -57,6 +54,7 @@ class Calendar:
         self._logger = logging.getLogger('AlarmSystem.calendar')
         self._arming_action_taken = False
         self._disarm_action_taken = False
+        self._must_disarm = False
 
     def check_calendar(self):
         """
@@ -64,22 +62,25 @@ class Calendar:
         :return: returns a tuple containing two bool values. The first is if an action needs to be taken, the second
         is if it is an arming action
         """
-        # TODO- we should consider getting the current event every time or at least every 30 seconds because the current
-        #  event count change
+        self._get_current_event()
         if self._current_event:
             start = self._current_event['start'].get('dateTime', self._current_event['start'].get('date'))
             end = self._current_event['end'].get('dateTime', self._current_event['end'].get('date'))
             if not self._arming_action_taken and self._should_system_be_armed(start, end):
+                self._must_disarm = False
                 self._logger.info("Calendar event starting, arming system.")
                 self._arming_action_taken = True
                 return True, True
-            elif not self._disarm_action_taken and self._after_event(end):
+            elif not self._disarm_action_taken and self._is_after_event(end):
                 self._logger.info("Calendar event ending, disarming system.")
+                self._must_disarm = False
                 self._disarm_action_taken = True
                 self._current_event = None
                 return True, False
-        else:
-            self._get_current_event()
+            elif self._must_disarm:
+                self._logger.info("Event was changed before disarm, disarming system")
+                self._must_disarm = False
+                return True, False
         return False, False
 
     def _get_current_event(self):
@@ -95,12 +96,14 @@ class Calendar:
         event = events_result.get('items', [])
         if event and self._current_event is not event:
             self._logger.info("New calendar event")
+            if self._arming_action_taken and not self._disarm_action_taken:
+                self._must_disarm = True
             self._current_event = event[0]
             self._arming_action_taken = False
             self._disarm_action_taken = False
 
     @staticmethod
-    def _before_event(event_start_str):
+    def _is_before_event(event_start_str):
         """
         Function for checking if the current time is before the event start time.
         :param event_start_str: The start time of the event
@@ -114,7 +117,7 @@ class Calendar:
         return True if start_time_in_sec > current_time_in_sec else False
 
     @staticmethod
-    def _after_event(event_end_str):
+    def _is_after_event(event_end_str):
         """
         Function for checking if the current time is past the given event end time.
         :param event_end_str: The end time of the event
@@ -126,7 +129,6 @@ class Calendar:
         now = now.replace(tzinfo=pytz.timezone('US/Eastern'))
         current_time_in_sec = (now - org_dt).total_seconds()
         return True if end_time_in_sec < current_time_in_sec else False
-
 
     @staticmethod
     def _should_system_be_armed(event_start_str, event_end_str):
