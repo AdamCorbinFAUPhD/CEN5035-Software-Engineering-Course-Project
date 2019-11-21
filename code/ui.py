@@ -1,6 +1,6 @@
 import urllib
 from time import time, sleep
-from flask import Flask, render_template, request, url
+from flask import Flask, render_template, request, url, redirect
 from system import System
 
 system_obj = System()
@@ -23,7 +23,13 @@ def get_time():
 
 @app.route("/GoogleCalendar")
 def calendar():
-    pass
+    # Create a button that will redirect to the Google calendar
+    # At the moment, not working -- need to add more
+    if action == "GoogleCalendar":{
+        # Placeholder for what the url is (will be changing)
+        url = https://calendar.google.com/calendar/b/5?cid=ZmF1Y2VuNTAzNUBnbWFpbC5jb20
+        return redirect(url, code = 307)
+    }
 
 
 if __name__ == '__main__':
