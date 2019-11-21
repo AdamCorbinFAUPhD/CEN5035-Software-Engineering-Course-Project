@@ -1,20 +1,23 @@
 import urllib
-from time import time
+from time import time, sleep
 
 from flask import Flask, render_template, request
 
 from system import System
 
-# system_obj = System()
+system_obj = System()
+sleep(10)
+
 app = Flask(__name__)
 
 
 @app.route("/")
 def status():
-    return render_template("index.html", time=get_time())
+    armed = system_obj.is_armed
+
+    return render_template("index.html", time=get_time(), armed=armed)
 
 
-@app.route("/")
 def get_time():
     return time()
 
