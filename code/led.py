@@ -1,4 +1,5 @@
 from time import sleep
+import logging
 
 import RPi.GPIO as GPIO
 from enum import Enum
@@ -43,8 +44,7 @@ class LED:
         The pin to control the blue LED
     """
 
-    def __init__(self, logger):
-        self._logger = logger
+    def __init__(self):
         # Initializing the GPIO Mode to Brodcom board pins which is what the T_Extension uses
         GPIO.setmode(GPIO.BCM)
 
@@ -58,6 +58,7 @@ class LED:
         GPIO.setup(self._LED_G, GPIO.OUT)
         GPIO.setup(self._LED_B, GPIO.OUT)
         self.clear_led()
+        self._logger = logging.getLogger('AlarmSystem.LED')
         self._logger.debug('LED object created')
 
     def clear_led(self, debug: bool = True):

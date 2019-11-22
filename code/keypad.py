@@ -1,5 +1,6 @@
 from queue import Queue
 from threading import Thread
+import logging
 
 import RPi.GPIO as GPIO
 
@@ -42,7 +43,7 @@ class Keypad:
         Pass in the key that was pressed in the queue to be processed by a separate thread
     """
 
-    def __init__(self, logger):
+    def __init__(self):
         """
         Initialization of the Keypad object. The only consideration is to make sure the thread is not started before
             the gpio pins are initialized.
@@ -52,25 +53,21 @@ class Keypad:
         GPIO.setmode(GPIO.BCM)
 
         self.keypress_queue = Queue()
-        self.thread = Thread(target=self.capture_keypress)
-
         self._row_pins = [22, 23, 24, 25]
         self._column_pins = [4, 5, 6, 13]
         self._matrix = [['1', '2', '3', 'A'],
                         ['4', '5', '6', 'B'],
                         ['7', '8', '9', 'C'],
                         ['*', '0', '#', 'D']]
-        self._logger = logger
-
         for col in self._column_pins:
             GPIO.setup(col, GPIO.OUT)
             GPIO.output(col, 1)
 
         for row in self._row_pins:
             GPIO.setup(row, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        self._logger = logging.getLogger('AlarmSystem.keypad')
         self._logger.debug('Keypad object created')
         # Start monitoring for key presses
-        self.thread.start()
 
     def capture_keypress(self):
         """

@@ -89,10 +89,11 @@ class System:
         self._running = False
         # list to keep track of worker threads
         self._threads = []
+        # DO NOT DO THIS HERE!! Instantiate and start threads in "run"
         # Any threads that need to be created
-        alarm_t = Thread(target=self._alarm, args=(), name="alarm_thread")
+        # alarm_t = Thread(target=self._alarm, args=(), name="alarm_thread")
         # alarm_t.start()
-        self._threads.append(alarm_t)
+        # self._threads.append(alarm_t)
 
         # Setup logging for this module.
         self._logger = logging.getLogger('AlarmSystem')
@@ -112,15 +113,15 @@ class System:
             exit(1)
 
         # Create the sub system items that the main system will monitor and control
-        self.keypad = Keypad(self._logger)
-        self.led = LED(self._logger)
-        self.pir_sensor = PirSensor(self._logger)
+        self.keypad = Keypad()
+        self.led = LED()
+        self.pir_sensor = PirSensor()
         self.calendar = Calendar()
         self.watson = Watson()
 
         # The web UI
         self._web_client = ui.create_app()
-        self._web_process = Process(target=self._web_client.run, args=('0.0.0.0', 5000))
+        self._web_process = Process(target=self._web_client.run, args=('127.0.0.1', 5000))
 
     def run(self):
         """
@@ -134,6 +135,9 @@ class System:
             calendar_t = Thread(target=self._calendar_thread, args=(), name="Calendar_Thread")
             self._threads.append(calendar_t)
             calendar_t.start()
+            k_thread = Thread(target=self.keypad.capture_keypress, args=(), name="Keypad_Thread")
+            self._threads.append(k_thread)
+            k_thread.start()
             self._main_thread()
             self._web_process.start()
             self._logger.info('web client has started')
