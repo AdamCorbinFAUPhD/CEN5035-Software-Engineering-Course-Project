@@ -136,7 +136,7 @@ class System:
             k_thread = Thread(target=self.keypad.capture_keypress, args=(), name="Keypad_Thread")
             self._threads.append(k_thread)
             k_thread.start()
-            alarm_t = Thread(target=self._alarm, args=(), name="alarm_thread")
+            alarm_t = Thread(target=self._alarm_thread(), args=(), name="Alarm_Thread")
             self._threads.append(alarm_t)
             alarm_t.start()
             self._web_process.start()
@@ -175,19 +175,23 @@ class System:
         self._user_pin_entry = ""
         self._user_first_key_entry_time = time()
 
-    def _alarm(self):
+    def _alarm_thread(self):
         """
         This method is intended to handle the periodic processing when the alarm needs to go off. Sounding an alarm and led
-        This is indented to be run in a thread and only run when alram is active. The Pictures and video should be handled
+        This is indented to be run in a thread and only run when alarm is active. The Pictures and video should be handled
         outside this thread when the alarm gets activated
         :return:
         """
-        while True:
+        # Threads should reference this run flag for loops so the system can close and join them when stopped.
+        while self._running:
             if self.alarm_active:
-                self.led.turn_on(color=LEDColor.RED, debug=False)
-                sleep(.1)
-                self.led.turn_off(color=LEDColor.RED, debug=False)
-                sleep(.1)
+                camera.take_alarm_photos()
+                camera.take_video()
+                while self.alarm_active:
+                    self.led.turn_on(color=LEDColor.RED, debug=False)
+                    sleep(.1)
+                    self.led.turn_off(color=LEDColor.RED, debug=False)
+                    sleep(.1)
             else:
                 # Added to not eat up the processing. This give a max of .5 delay when the alarm can be started
                 sleep(.5)
