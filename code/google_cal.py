@@ -96,9 +96,9 @@ class Calendar:
         event = events_result.get('items', [])
         event = event[0]  # Event returned is an array even though we specify only 1 result. lets convert it to 1 item
         if self._current_event is None or event and self._current_event != event:
-            if self._current_event:
-                print(self._current_event.get("id", ""), "=", event.get("id"))
             self._logger.info("New calendar event")
+            self._logger.info("Start: " + event["start"]["dateTime"])
+            self._logger.info("end: " + event["end"]["dateTime"])
             if self._arming_action_taken and not self._disarm_action_taken:
                 self._must_disarm = True
             self._current_event = event
