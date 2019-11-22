@@ -3,6 +3,7 @@ from pir_event import PIREvent
 from pir_event import PirEventType
 import time
 import RPi.GPIO as GPIO
+import logging
 
 """
 # PIR Sensor
