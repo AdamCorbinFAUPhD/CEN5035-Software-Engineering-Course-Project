@@ -13,7 +13,7 @@ stop_video_cmd = '/config/set?emulate_motion=off'
 
 VIDEO_TIME = 20
 
-NUM_PHOTOS = 5
+NUM_PHOTOS = 1
 
 module_logger = logging.getLogger('AlarmSystem.camera')
 

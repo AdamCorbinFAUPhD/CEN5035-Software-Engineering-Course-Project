@@ -134,12 +134,13 @@ class System:
             k_thread = Thread(target=self.keypad.capture_keypress, args=(), name="Keypad_Thread")
             self._threads.append(k_thread)
             k_thread.start()
-            self._web_process.start()
-            self._main_thread()
-            self._logger.info('web client has started')
             alarm_t = Thread(target=self._alarm, args=(), name="alarm_thread")
             self._threads.append(alarm_t)
             alarm_t.start()
+            self._web_process.start()
+            self._main_thread()
+            self._logger.info('web client has started')
+
 
 
     def _process_keypress_event(self, keypress_event: str):
@@ -176,12 +177,11 @@ class System:
 
     def _alarm(self):
         """
-        This method is intended to handle the processing when the alarm needs to go off. Sounding an alarm and led
-        This is indented to be run in a thread and only run when alram is active
+        This method is intended to handle the periodic processing when the alarm needs to go off. Sounding an alarm and led
+        This is indented to be run in a thread and only run when alram is active. The Pictures and video should be handled
+        outside this thread when the alarm gets activated
         :return:
         """
-        camera.take_video()
-        camera.take_alarm_photos()
         while True:
             if self.alarm_active:
                 self.led.turn_on(color=LEDColor.RED, debug=False)
@@ -210,6 +210,9 @@ class System:
             if self.is_armed:
                 # First event that has occurred when armed, activate alarm thread
                 if not self.alarm_active:
+                    # TODO - capture picture and video here
+                    # camera.take_video()
+                    camera.take_alarm_photos()
                     self.alarm_active = True
                     self._logger.info('Alarm has been activated')
                     self.watson.send_alarm_activated()
