@@ -5,6 +5,7 @@ import socket
 from sys import exit
 import json
 from time import time, sleep
+from multiprocessing import Process
 
 from keypad import Keypad
 from led import LED, LEDColor
@@ -13,6 +14,7 @@ from pir_sensor import PirSensor
 from google_cal import Calendar
 from watson_processing import Watson
 import camera
+import ui
 
 """
 # Arming the system
@@ -116,6 +118,10 @@ class System:
         self.calendar = Calendar()
         self.watson = Watson()
 
+        # The web UI
+        self._web_process = Process(target=self._web_client.run, args=('0.0.0.0', 5000))
+        self._web_client = ui.create_app(self)
+
     def run(self):
         """
         System checks sensors if armed and looks for inputs.
@@ -129,6 +135,8 @@ class System:
             self._threads.append(calendar_t)
             calendar_t.start()
             self._main_thread()
+            self._web_process.start()
+            self._logger.info('web client has started')
 
     def _process_keypress_event(self, keypress_event: str):
         """
@@ -274,7 +282,7 @@ class System:
 
     def _connection_thread(self, connection: socket.socket):
         """
-        Process a connection
+        Process a connection from the system client.
         :param connection: The socket connection to utilize
         """
         try:
@@ -297,6 +305,9 @@ class System:
                 elif func == 'take_video':
                     camera.take_video()
                     connection.send(json.dumps({'result': True}).encode('utf-8'))
+                elif func == 'status':
+                    connection.send(json.dumps({'result': {'armed': self.is_armed, 'led_color': self.led.color.name,
+                                                           'led_enabled': self.led.enabled}}).encode('utf-8'))
         except socket.error as e:
             self._logger.error('{}'.format(e))
         except json.JSONDecodeError as e:
@@ -325,6 +336,9 @@ class System:
         for t in self._threads:
             t.join()
         self._logger.debug('threads joined')
+        self._logger.debug('stopping UI process')
+        self._web_process.close()
+        self._logger.debug('stopped UI process')
 
     def _set_arm_after_delay(self):
         self.is_armed = True
