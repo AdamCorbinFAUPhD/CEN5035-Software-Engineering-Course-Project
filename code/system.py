@@ -91,7 +91,7 @@ class System:
         self._threads = []
         # Any threads that need to be created
         alarm_t = Thread(target=self._alarm, args=(), name="alarm_thread")
-        alarm_t.start()
+        # alarm_t.start()
         self._threads.append(alarm_t)
 
         # Setup logging for this module.
