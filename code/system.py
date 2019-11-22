@@ -119,7 +119,7 @@ class System:
         self.watson = Watson()
 
         # The web UI
-        self._web_client = ui.create_app(self)
+        self._web_client = ui.create_app()
         self._web_process = Process(target=self._web_client.run, args=('0.0.0.0', 5000))
 
     def run(self):
