@@ -51,8 +51,10 @@ class SysClient:
         :return: dict or None
         """
         try:
-            self._socket.send(json.dumps({'func': 'get_status'}).encode('utf-8'))
-            data = json.loads(bytes(self._socket.recv(1024)).decode('utf-8'))
+            self._socket.send(json.dumps({'func': 'status'}).encode('utf-8'))
+            packet = self._socket.recv(1024)
+            self._logger.debug('received: {}'.format(packet))
+            data = json.loads(packet.decode('utf-8'))
             if data is not None and isinstance(data, dict):
                 return data
             else:
