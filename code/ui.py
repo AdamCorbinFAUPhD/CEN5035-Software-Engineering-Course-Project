@@ -1,6 +1,6 @@
 import urllib
 from time import time, sleep
-from flask import Flask, render_template, request, url, redirect
+from flask import Flask, render_template, request, redirect
 import os
 import sys_client
 
