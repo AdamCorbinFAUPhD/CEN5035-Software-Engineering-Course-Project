@@ -137,6 +137,10 @@ class System:
             self._web_process.start()
             self._main_thread()
             self._logger.info('web client has started')
+            alarm_t = Thread(target=self._alarm, args=(), name="alarm_thread")
+            self._threads.append(alarm_t)
+            alarm_t.start()
+
 
     def _process_keypress_event(self, keypress_event: str):
         """
@@ -341,6 +345,7 @@ class System:
         self._logger.debug('stopped UI process')
 
     def _set_arm_after_delay(self):
+        self._logger.info("System has been set to armed")
         self.is_armed = True
         self.watson.send_armed()
 
@@ -352,12 +357,13 @@ class System:
         :param pin: the system pin
         """
         if not self.is_armed and self._check_pin(pin):
-            self._logger.info('System is now armed')
+            self._logger.info('Passcode entered correctly. System will be armed in ' + str(self._arm_time_delay)
+                              + " seconds")
             self.reset_user_entry()
             self._invalid_entry_count = 0
             self.led.flash_led(color=LEDColor.GREEN, flash_count=5)
             self.led.turn_on(color=LEDColor.BLUE)
-            Timer(self._arm_time_delay, self._set_arm_after_delay, ()).start()
+            Timer(self._arm_time_delay, self._set_arm_after_delay).start()
             return True
         else:
             return self.invalid_pin_entry()
