@@ -290,7 +290,7 @@ class System:
         :param connection: The socket connection to utilize
         """
         try:
-            data = json.loads(bytearray(connection.recv(1024)).decode('utf-8'))
+            data = json.loads(bytes(connection.recv(1024)).decode('utf-8'))
             if data is not None and isinstance(data, dict) and 'func' in data:
                 func = data['func']
                 if func == '_arm' and 'pin' in data and isinstance(data['pin'], str):
@@ -310,8 +310,8 @@ class System:
                     camera.take_video()
                     connection.send(json.dumps({'result': True}).encode('utf-8'))
                 elif func == 'status':
-                    connection.send(json.dumps({'result': {'armed': self.is_armed, 'led_color': self.led.color.name,
-                                                           'led_enabled': self.led.enabled}}).encode('utf-8'))
+                    connection.send(json.dumps({'armed': self.is_armed, 'led_color': self.led.color.name,
+                                                           'led_enabled': self.led.enabled}).encode('utf-8'))
         except socket.error as e:
             self._logger.error('{}'.format(e))
         except json.JSONDecodeError as e:

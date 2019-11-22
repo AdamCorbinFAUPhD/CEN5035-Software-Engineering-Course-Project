@@ -52,7 +52,7 @@ class SysClient:
         """
         try:
             self._socket.send(json.dumps({'func': 'get_status'}).encode('utf-8'))
-            data = json.loads(bytearray(self._socket.recv(1024)).decode('utf-8'))
+            data = json.loads(bytes(self._socket.recv(1024)).decode('utf-8'))
             if data is not None and isinstance(data, dict):
                 return data
             else:
