@@ -138,8 +138,8 @@ class System:
             k_thread = Thread(target=self.keypad.capture_keypress, args=(), name="Keypad_Thread")
             self._threads.append(k_thread)
             k_thread.start()
-            self._main_thread()
             self._web_process.start()
+            self._main_thread()
             self._logger.info('web client has started')
 
     def _process_keypress_event(self, keypress_event: str):
