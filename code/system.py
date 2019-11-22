@@ -9,6 +9,7 @@ from multiprocessing import Process
 
 from keypad import Keypad
 from led import LED, LEDColor
+from notifications import Notifications
 from pir_event import PIREvent, PirEventType
 from pir_sensor import PirSensor
 from google_cal import Calendar
@@ -114,6 +115,7 @@ class System:
         self.pir_sensor = PirSensor()
         self.calendar = Calendar()
         self.watson = Watson()
+        self.notifications = Notifications()
 
         # The web UI
         self._web_client = ui.create_app()
@@ -140,8 +142,6 @@ class System:
             self._web_process.start()
             self._main_thread()
             self._logger.info('web client has started')
-
-
 
     def _process_keypress_event(self, keypress_event: str):
         """
@@ -213,6 +213,7 @@ class System:
                     # TODO - capture picture and video here
                     # camera.take_video()
                     camera.take_alarm_photos()
+                    self.notifications.send_alert_message()
                     self.alarm_active = True
                     self._logger.info('Alarm has been activated')
                     self.watson.send_alarm_activated()
@@ -314,7 +315,7 @@ class System:
                     connection.send(json.dumps({'result': True}).encode('utf-8'))
                 elif func == 'status':
                     connection.send(json.dumps({'armed': self.is_armed, 'led_color': self.led.color.name,
-                                                           'led_enabled': self.led.enabled}).encode('utf-8'))
+                                                'led_enabled': self.led.enabled}).encode('utf-8'))
         except socket.error as e:
             self._logger.error('{}'.format(e))
         except json.JSONDecodeError as e:
