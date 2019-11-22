@@ -57,9 +57,9 @@ class LED:
         GPIO.setup(self._LED_R, GPIO.OUT)
         GPIO.setup(self._LED_G, GPIO.OUT)
         GPIO.setup(self._LED_B, GPIO.OUT)
-        self.clear_led()
         self._logger = logging.getLogger('AlarmSystem.LED')
         self._logger.debug('LED object created')
+        self.clear_led()
 
     def clear_led(self, debug: bool = True):
         if debug: self._logger.debug('Clearing LED')
