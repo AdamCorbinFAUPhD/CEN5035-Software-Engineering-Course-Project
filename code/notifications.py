@@ -1,5 +1,7 @@
 # Download the helper library from https://www.twilio.com/docs/python/install
 import logging
+import base64
+import requests
 
 from twilio.rest import Client
 
@@ -19,9 +21,25 @@ class Notifications:
         self._logger = logging.getLogger('AlarmSystem.notification')
 
     def send_alert_message(self):
+        # Upload image
+
+        with open("/home/pi/Desktop/3254-20191122051643-snapshot.jpg", "rb") as file:
+            url = "https://api.imgbb.com/1/upload"
+            key_imgbb = "98372b96b86a467e80e33905a3418ad4"
+            payload = {
+                "key": key_imgbb,
+                "image": base64.b64encode(file.read()),
+            }
+            res = requests.post(url, payload)
+            # TODO - figure out how to get the image uploaded then create the URL
+            print(res)
         image_url = "https://thumbs.dreamstime.com/z/tv-test-image-card-rainbow-multi-color-bars-geometric-signals-retro-hardware-s-minimal-pop-art-print-suitable-89603635.jpg"
         self.client.messages.create(
             body="Alert has been detected. View the stream here: http://adamcorbin.com:8081",
             from_=corbin_from_number,
             to='+17275108407',
-            media_url=image_url)
+            media_url="https://i.ibb.co/zGD10Gd/150f303418a4.jpg")
+
+if __name__ == '__main__':
+    notif = Notifications()
+    notif.send_alert_message()
