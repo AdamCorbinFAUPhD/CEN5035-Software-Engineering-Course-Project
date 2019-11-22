@@ -88,12 +88,8 @@ class System:
         # System needs to be running
         self._running = False
         # list to keep track of worker threads
+        # DO NOT Create or start threads here!! Do it in the run method.
         self._threads = []
-        # DO NOT DO THIS HERE!! Instantiate and start threads in "run"
-        # Any threads that need to be created
-        # alarm_t = Thread(target=self._alarm, args=(), name="alarm_thread")
-        # alarm_t.start()
-        # self._threads.append(alarm_t)
 
         # Setup logging for this module.
         self._logger = logging.getLogger('AlarmSystem')
@@ -125,7 +121,7 @@ class System:
 
     def run(self):
         """
-        System checks sensors if armed and looks for inputs.
+        System will create and start the helper threads here to ensure synchronization
         """
         if not self._running:
             self._running = True
