@@ -1,4 +1,4 @@
-from flask import current_app, g
+from flask import g
 import socket
 import json
 import logging
@@ -67,20 +67,73 @@ class SysClient:
             return None
 
     def set_pin(self, current_pin, new_pin):
-        # TODO: implement set_pin
-        pass
+        try:
+            self._socket.send(json.dumps({'func': 'set_pin', 'current_pin': current_pin,
+                                          'new_pin': new_pin}).encode('utf-8'))
+            packet = self._socket.recv(1024)
+            self._logger.debug('received: {}'.format(packet))
+            data = json.loads(packet.decode('utf-8'))
+            if data is not None and isinstance(data, dict):
+                return data
+            else:
+                return None
+        except socket.error as e:
+            self._logger.error('{}'.format(e))
+            return None
+        except json.JSONDecodeError as e:
+            self._logger.error('{}'.format(e))
+            return None
 
-    def arm_disarm(self, current_pin):
-        # TODO: implement arm/disarm
-        pass
+    def arm_disarm(self, pin):
+        try:
+            self._socket.send(json.dumps({'func': 'arm_disarm', 'pin': pin}).encode('utf-8'))
+            packet = self._socket.recv(1024)
+            self._logger.debug('received: {}'.format(packet))
+            data = json.loads(packet.decode('utf-8'))
+            if data is not None and isinstance(data, dict):
+                return data
+            else:
+                return None
+        except socket.error as e:
+            self._logger.error('{}'.format(e))
+            return None
+        except json.JSONDecodeError as e:
+            self._logger.error('{}'.format(e))
+            return None
 
     def take_photo(self):
-        # TODO: implement take_photo
-        pass
+        try:
+            self._socket.send(json.dumps({'func': 'take_photo'}).encode('utf-8'))
+            packet = self._socket.recv(1024)
+            self._logger.debug('received: {}'.format(packet))
+            data = json.loads(packet.decode('utf-8'))
+            if data is not None and isinstance(data, dict):
+                return data
+            else:
+                return None
+        except socket.error as e:
+            self._logger.error('{}'.format(e))
+            return None
+        except json.JSONDecodeError as e:
+            self._logger.error('{}'.format(e))
+            return None
 
     def take_video(self):
-        # TODO: implement take_video
-        pass
+        try:
+            self._socket.send(json.dumps({'func': 'take_video'}).encode('utf-8'))
+            packet = self._socket.recv(1024)
+            self._logger.debug('received: {}'.format(packet))
+            data = json.loads(packet.decode('utf-8'))
+            if data is not None and isinstance(data, dict):
+                return data
+            else:
+                return None
+        except socket.error as e:
+            self._logger.error('{}'.format(e))
+            return None
+        except json.JSONDecodeError as e:
+            self._logger.error('{}'.format(e))
+            return None
 
     def shutdown(self):
         """

@@ -304,12 +304,13 @@ class System:
             data = json.loads(bytes(connection.recv(1024)).decode('utf-8'))
             if data is not None and isinstance(data, dict) and 'func' in data:
                 func = data['func']
-                if func == '_arm' and 'pin' in data and isinstance(data['pin'], str):
-                    result = self._arm(data['pin'])
-                    connection.send(json.dumps({'result': result}).encode('utf-8'))
-                elif func == '_disarm' and 'pin' in data and isinstance(data['pin'], str):
-                    result = self._disarm(data['pin'])
-                    connection.send(json.dumps({'result': result}).encode('utf-8'))
+                if func == 'arm_disarm' and 'pin' in data and isinstance(data['pin'], str):
+                    if self.is_armed:
+                        result = self._disarm(data['pin'])
+                        connection.send(json.dumps({'result': result}).encode('utf-8'))
+                    else:
+                        result = self._arm(data['pin'])
+                        connection.send(json.dumps({'result': result}).encode('utf-8'))
                 elif func == 'set_pin' and 'current_pin' in data and isinstance(data['current_pin'], str) \
                         and 'new_pin' in data and isinstance(data['new_pin'], str):
                     result = self._set_pin(data['current_pin'], data['new_pin'])
@@ -423,7 +424,6 @@ class System:
                 self.led.clear_led()
                 self.led.flash_led(color=LEDColor.GREEN, flash_count=5)
                 self._invalid_entry_count = 0
-
                 return True
             else:
                 return self.invalid_pin_entry()
