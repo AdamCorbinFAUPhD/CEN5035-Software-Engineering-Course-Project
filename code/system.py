@@ -1,4 +1,6 @@
+import glob
 import logging
+import os
 import queue
 from threading import Thread, Timer
 import socket
@@ -185,7 +187,11 @@ class System:
         # Threads should reference this run flag for loops so the system can close and join them when stopped.
         while self._running:
             if self.alarm_active:
-                camera.take_alarm_photos()
+                camera.take_photo()
+                # Get the latest image taken and send that in the message
+                list_of_files = glob.glob("/home/pi/motion/camera1" + '/*-snapshot.jpg')
+                latest_file = max(list_of_files, key=os.path.getctime)
+                self.notifications.send_alert_message(latest_file)
                 camera.take_video()
                 while self.alarm_active:
                     self.led.turn_on(color=LEDColor.RED, debug=False)
@@ -214,7 +220,6 @@ class System:
             if self.is_armed:
                 # First event that has occurred when armed, activate alarm thread
                 if not self.alarm_active:
-                    self.notifications.send_alert_message()
                     self.alarm_active = True
                     self._logger.info('Alarm has been activated')
                     self.watson.send_alarm_activated()
