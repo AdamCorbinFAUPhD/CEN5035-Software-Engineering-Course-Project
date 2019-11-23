@@ -17,6 +17,10 @@ NUM_PHOTOS = 1
 
 module_logger = logging.getLogger('AlarmSystem.camera')
 
+# The target_dir is the path where the photos will be stored. To change this you need to edit the
+# target_dir in  /etc/motion/motion.conf
+target_dir = "/home/pi/motion/camera1"
+
 
 def take_photo():
     """
