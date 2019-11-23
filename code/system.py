@@ -188,6 +188,7 @@ class System:
         while self._running:
             if self.alarm_active:
                 camera.take_photo()
+                sleep(1)
                 # Get the latest image taken and send that in the message
                 list_of_files = glob.glob("/home/pi/motion/camera1" + '/*-snapshot.jpg')
                 latest_file = max(list_of_files, key=os.path.getctime)
