@@ -214,9 +214,6 @@ class System:
             if self.is_armed:
                 # First event that has occurred when armed, activate alarm thread
                 if not self.alarm_active:
-                    # TODO - capture picture and video here
-                    # camera.take_video()
-                    camera.take_alarm_photos()
                     self.notifications.send_alert_message()
                     self.alarm_active = True
                     self._logger.info('Alarm has been activated')
