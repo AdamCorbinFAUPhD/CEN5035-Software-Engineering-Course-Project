@@ -38,7 +38,7 @@ class Notifications:
             from_=corbin_from_number,
             to='+17275108407',
             media_url=image_url)
-        self._logger.debug("MMS message sent " + res)
+        self._logger.debug("MMS message sent " + str(res))
 
 if __name__ == '__main__':
     notif = Notifications()
