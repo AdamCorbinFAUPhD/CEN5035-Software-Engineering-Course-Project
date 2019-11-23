@@ -138,7 +138,7 @@ class System:
             k_thread = Thread(target=self.keypad.capture_keypress, args=(), name="Keypad_Thread")
             self._threads.append(k_thread)
             k_thread.start()
-            alarm_t = Thread(target=self._alarm_thread(), args=(), name="Alarm_Thread")
+            alarm_t = Thread(target=self._alarm_thread, args=(), name="Alarm_Thread")
             self._threads.append(alarm_t)
             alarm_t.start()
             self._web_process.start()
