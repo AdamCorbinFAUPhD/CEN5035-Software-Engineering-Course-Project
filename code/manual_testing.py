@@ -40,9 +40,12 @@ class ManualTesting:
         print("")
 
     def run(self):
+        user_entry = -1
         while True:
-            self.print_actions()
-            self.get_and_process_user_entry()
+            # dont print the actions after the keypad entries (0-9)
+            if user_entry == -1 or user_entry >= 10:
+                self.print_actions()
+            user_entry = self.get_and_process_user_entry()
 
     def get_and_process_user_entry(self):
         user_entry = input("Enter action: ")
@@ -78,6 +81,7 @@ class ManualTesting:
             camera.take_photo()
         elif user_entry == "":
             pass
+        return int(user_entry)
 
 
 if __name__ == '__main__':
