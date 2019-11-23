@@ -4,6 +4,7 @@ This module is intended to have a human manually send events into the system. Th
 import time
 from threading import Timer
 
+import camera
 from pir_event import PIREvent, PirEventType
 from system import System
 
@@ -35,6 +36,7 @@ class ManualTesting:
         print("30 - System status")
         print("40 - _arm the system")
         print("41 - de-_arm the system")
+        print("50 - Take picture")
         print("")
 
     def run(self):
@@ -72,6 +74,8 @@ class ManualTesting:
             self.system.is_armed = True
         elif user_entry == "41":
             self.system.is_armed = False
+        elif user_entry == "50":
+            camera.take_photo()
         elif user_entry == "":
             pass
 
