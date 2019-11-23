@@ -22,6 +22,11 @@ def status():
     return render_template("index.html", time=get_time(), armed=armed, led_color=led_color, led_enabled=led_enabled)
 
 
+def arm_disarm():
+    client = sys_client.get_client()
+    result = client.arm_disarm()
+
+
 def get_time():
     return time()
 
