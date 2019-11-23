@@ -29,7 +29,7 @@ def take_photo():
     full_url = url + photo_cmd
     command = ['curl', '-s', full_url]
     process = subprocess.Popen(command, stdout=subprocess.PIPE)
-    out, err = process.communicate()
+    # out, err = process.communicate()
     module_logger.info("Photo taken")
 
 
@@ -65,11 +65,11 @@ def _video_thread():
     full_url = url + start_video_cmd
     command = ['curl', '-s', full_url]
     process = subprocess.Popen(command, stdout=subprocess.PIPE)
-    out, err = process.communicate()
+    # out, err = process.communicate()
     module_logger.info("Video started")
     sleep(VIDEO_TIME)
     full_url = url + stop_video_cmd
     command = ['curl', '-s', full_url]
     process = subprocess.Popen(command, stdout=subprocess.PIPE)
-    out, err = process.communicate()
+    # out, err = process.communicate()
     module_logger.info("Video completed")

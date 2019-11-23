@@ -188,13 +188,14 @@ class System:
         while self._running:
             if self.alarm_active:
                 camera.take_photo()
+                camera.take_video()
                 sleep(1)
                 # Get the latest image taken and send that in the message
                 list_of_files = glob.glob("/home/pi/motion/camera1" + '/*-snapshot.jpg')
                 latest_file = max(list_of_files, key=os.path.getctime)
                 self.notifications.send_alert_message(latest_file)
                 camera.take_video()
-                while self.alarm_active:
+                while self.alarm_active and self._running:
                     self.led.turn_on(color=LEDColor.RED, debug=False)
                     sleep(.1)
                     self.led.turn_off(color=LEDColor.RED, debug=False)
@@ -226,7 +227,6 @@ class System:
                     self.watson.send_alarm_activated()
             self._logger.debug('Rising event occurred')
             self.watson.send_movement_rising()
-        pass
 
     def _sensor_thread(self):
         """
@@ -267,7 +267,7 @@ class System:
                 self._process_pir_event(pir_event)
             except queue.Empty:
                 pass
-
+            sleep(.2)
             # TODO - should we consider a delay in this tread to not eat up the process?
 
     def _main_thread(self):
