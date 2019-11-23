@@ -33,11 +33,12 @@ class Notifications:
 
         now = datetime.now()
         now_date_time = now.strftime("%Y-%m-%d %H:%M:%S")
-        self.client.messages.create(
+        res = self.client.messages.create(
             body="Alert has been detected @" + now_date_time + ". View the stream here: http://adamcorbin.com:8081",
             from_=corbin_from_number,
             to='+17275108407',
             media_url=image_url)
+        self._logger.debug("MMS message sent " + res)
 
 if __name__ == '__main__':
     notif = Notifications()
