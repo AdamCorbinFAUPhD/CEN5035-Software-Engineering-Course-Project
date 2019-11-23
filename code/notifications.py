@@ -5,20 +5,15 @@ import requests
 
 from twilio.rest import Client
 
-# Your Account Sid and Auth Token from twilio.com/console
-# DANGER! This is insecure. See http://twil.io/secure
-account_sid = 'AC10a582ab8d3a246de34218bebd80ccfd'
-auth_token = 'd6f5c31e8b7b391295be0b68d4421287'
-
-corbin_from_number = "+14029650199"
-corbin_account_sid = 'ACfb37f19d85abaa37627b727da73c776f'
-corbin_test_auth_token = "5f4ab212948c4e76471a9f0b47a20863"
+# The Notifications secret will live on the server and not in the repo
+from notifications_secret import corbin_from_number, corbin_account_sid, corbin_test_auth_token
 
 
 class Notifications:
     def __init__(self):
         self.client = Client(username=corbin_account_sid, password=corbin_test_auth_token)
         self._logger = logging.getLogger('AlarmSystem.notification')
+        self._logger.info("Notifications object created")
 
     def send_alert_message(self):
         # Upload image
