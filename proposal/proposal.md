@@ -78,7 +78,7 @@ TODO - Consider going back and seeing we need to add anymore definitions. Also p
 # Overview of Scenarios and Use Cases
 **Use Case: Enable Alarm**
 
-**Brief Description** : Ssystem owner arms the monitoring service
+**Brief Description** : System owner arms the monitoring service
 
 **Basic Flow** :
 
@@ -100,7 +100,7 @@ TODO - Consider going back and seeing we need to add anymore definitions. Also p
 
 **Use Case: Disable Alarm**
 
-**Brief Description** : Ssystem owner disarms monitoring service
+**Brief Description** : System owner disarms monitoring service
 
 **Basic Flow** :
 
