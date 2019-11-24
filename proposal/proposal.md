@@ -242,12 +242,14 @@ The following ports were opened up:
 
     ![](images/putty_commands.PNG)
 1. If you need to make any changes do it from your local computer and then use FileZila to transfer the file over to retest
+
 ### Real VNC
 In the event that someone would like to remote into the Raspberry Pi desktop RealVNC was installed on the 
 Pi. In order for this to work on someones local computer, their email would need to be added to the 
 approved email list. Once added to the list, all thats needed is to download the local client to 
 communicate to the server on the Raspberry Pi.
-###Hardware build
+
+### Hardware build
 TODO- go into detail on what each item is used for
 List of components:
 * Raspberry Pi 2B+
