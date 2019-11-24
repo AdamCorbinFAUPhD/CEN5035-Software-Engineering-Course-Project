@@ -39,8 +39,8 @@ def arm_disarm():
 def get_time():
     return time()
 
- @app.route("/GoogleCalendar")
- def calendar():
+@app.route("/GoogleCalendar")
+def calendar():
      # Create a button that will redirect to the Google calendar
      # At the moment, not working -- need to add more
         # url = https://calendar.google.com/calendar/b/5?cid=ZmF1Y2VuNTAzNUBnbWFpbC5jb20
