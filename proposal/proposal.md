@@ -200,6 +200,63 @@ List components and tools we might use:
 - MotionEyeOS as a monitoring system - [https://github.com/ccrisan/motioneyeos](https://github.com/ccrisan/motioneyeos)
 - PrivateEyePi as monitoring system - [http://projects.privateeyepi.com/home/home-alarm-system-project](http://projects.privateeyepi.com/home/home-alarm-system-project)
 - Python, HTML, PHP
+###Motion library 
+Since the semester is a short time frame our team tried to leverage as much open source software as much as possible. Our initial setup of getting the PS3 Eye Camera working used a library called motion. This library is highly configurable and can support many different types of cameras. IT was not designed specifically for the Raspberry Pi but has supporting plugins to help communicate to the cameras. Its intended platform is linux based and was also intended to be used as a way to monitor multiple cameras. Project website: https://motion-project.github.io/motion_config.html
+
+TODO_AC - add how it was installed
+
+TODO_AC - Add what configurations needed to be updated in order to get working
+To start the video stream run “sudo motion -b”
+
+
+## Class Diagrams
+### System class
+![](images/system.png)
+## Development Environment setup
+TODO go into how we have remote people and we needed a way for people to test the hardware
+### Tools
+* Filezilla - File transfer system to move files from a local computer to the remote Raspberry P
+* Putty or any SSH program - This program is used to tunnel into the terminal of the Raspberry Pi which would be used to run scripts
+* Python file editor like Notepad++ or PyCharm - This is intended to be used to create the python files on your local host. Because some of the scripts need hardware outputs, most might only be able to be tested using the remote Raspberry Pi
+* Real VNC client - This will be used if someone wants to visually see the Raspberry Pi desktop. In most cases this might not be needed but its good to have this option available
+### Port Forwarding on router for SSH 
+In order to get the SSH and FTP working the router need to open up the ports to the outside world. 
+Otherwise the router would just block all requests and it would appear if something isn't working. 
+
+The following ports were opened up:
+* Port 22 for SFTP transfers
+* Port 2022 for SSH communications
+* Port 5901 for VNC
+* Port 8081 for camera streaming using motion
+### Workflow to editing and testing out code
+1. Locally clone repo from https://github.com/AdamCorbinFAUPhD/CEN5035-Software-Engineering-Course-Project
+1. Make changes to the files if necessary 
+1. Send files using FileZilla
+   * Setup of FileZilla
+   * Screenshot of the settings of the server
+   
+   ![](images/filezilla_settings.png)
+   
+1. From putty you can run the python files by doing: "python3 file.py"
+
+    ![](images/putty_commands.png)
+1. If you need to make any changes do it from your local computer and then use FileZila to transfer the file over to retest
+### Real VNC
+In the event that someone would like to remote into the Raspberry Pi desktop RealVNC was installed on the 
+Pi. In order for this to work on someones local computer, their email would need to be added to the 
+approved email list. Once added to the list, all thats needed is to download the local client to 
+communicate to the server on the Raspberry Pi.
+###Hardware build
+TODO- go into detail on what each item is used for
+List of components:
+* Raspberry Pi 2B+
+* T_Extender
+* Membrane Touchpad 
+* RBG LED module
+* Breadboard
+* PID sensor module
+* PS3 Eye camera
+
 
 # Team Member Contribution
 
