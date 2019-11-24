@@ -236,11 +236,11 @@ The following ports were opened up:
    * Setup of FileZilla
    * Screenshot of the settings of the server
    
-   ![](images/filezilla_settings.png)
+   ![](images/filezilla_settings.PNG)
    
 1. From putty you can run the python files by doing: "python3 file.py"
 
-    ![](images/putty_commands.png)
+    ![](images/putty_commands.PNG)
 1. If you need to make any changes do it from your local computer and then use FileZila to transfer the file over to retest
 ### Real VNC
 In the event that someone would like to remote into the Raspberry Pi desktop RealVNC was installed on the 
