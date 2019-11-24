@@ -58,6 +58,7 @@ Our target audience will be for anyone who wants to have a security system that 
 |---|---|
 |X |Includes|
 |O |Excludes |
+
 TODO - Consider beefing this up a little. In the first example given in class they have 2 sections: 
 Competitive relationship and Competitive advantages
 
