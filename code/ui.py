@@ -25,7 +25,15 @@ def status():
 def arm_disarm():
     client = sys_client.get_client()
     result = client.arm_disarm()
-
+    # Testing
+    current_status = flask.request.args.get('status')
+    # I'm not completely sure how to do this -- pseudocode for now
+        # if current_status == armed
+        # results == armed
+        # else
+        # results == disarmed
+    # Demonstration of the backend, needs to be tested
+    return 'Armed' if current_status == 'Disarmed' else 'Disarmed'
 
 def get_time():
     return time()
