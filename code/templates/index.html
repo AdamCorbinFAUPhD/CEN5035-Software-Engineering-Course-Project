@@ -39,6 +39,19 @@
   $(document).ready(function(){
     $('.toggle').click(function(){
       var current_status = $('.status').text();
+      // Testing
+      $.ajax({
+        url: "/arm_disarm",
+        type: "get",
+          data: {status: current_status},
+            success: function(response) {
+              $(".status").html(response);
+            },
+        error: function(xhr) {
+          // Do something to handle error
+        }
+      });
+      // Displays the current status underneath toggle switch
       if (current_status === 'Disarmed'){
         $('.status').html('Armed');
       }
