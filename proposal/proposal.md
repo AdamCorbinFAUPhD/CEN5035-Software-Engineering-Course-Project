@@ -58,10 +58,13 @@ Our target audience will be for anyone who wants to have a security system that 
 |---|---|
 |X |Includes|
 |O |Excludes |
+TODO - Consider beefing this up a little. In the first example given in class they have 2 sections: 
+Competitive relationship and Competitive advantages
 
 An advantage that our Smart Security System is that the system will be able to connect up with the owner’s digital schedule. There is only one other system that has that capability, FrontPoint. The advantage our system has over FrontPoint, along with the other systems, is the ability to receive these alerts quick enough in order to determine whether the alert was real or not. Our system will be able to notify authorities quickly enough after confirmation. 
 
 # Data Definition
+TODO - Consider going back and seeing we need to add anymore definitions. Also probably need to go into a little more detail 
 - Enable/arm - Turning the system on to monitor for intruders
 - Active - Currently monitoring for intruders
 - Disable - The system inactive and not monitoring for motion
@@ -148,13 +151,19 @@ An advantage that our Smart Security System is that the system will be able to c
         i. See **Use Case Disable False Alarm**
         
 # Initial list of High-Level functional requirements
-TODO - Create unique requirement numbers. Remove the bolded tags.  Change will -> shall
-1. **Detection System**. The system will monitor user designated areas for any signs of movement when the system has been armed.
-2. **Automated Monitoring Calendar**. The system will provide the user with a calendar that can be utilized to schedule times when the system should arm and disarm automatically.
-3. **Recording System**. The system will stream video, and audio from an area designated by the user. The system will capture pictures and record audio/video when the system has been armed and triggered.
-4. **User Interface**. The system will provide the user an interface for viewing pictures and video recordings. In addition, the interface will provide the user the ability to view and edit the monitoring calendar. Finally, the system will provide the user with the ability to arm and disarm the system.
-5. **Alert System**. The system will audibly notify the user and the surrounding area when the system has been armed and triggered.
-6. **Reporting System**. The system will send messages to the user when the system has been armed and triggered. Additionally, it will take user feedback in the event the trigger was a false alarm.
+TODO - Create unique requirement numbers. Change will -> shall
+## Detection System
+1. The system will monitor user designated areas for any signs of movement when the system has been armed.
+## Automated Monitoring Calendar
+2. The system will provide the user with a calendar that can be utilized to schedule times when the system should arm and disarm automatically.
+## Recording System
+3. The system will stream video, and audio from an area designated by the user. The system will capture pictures and record audio/video when the system has been armed and triggered.
+## User Interface
+4. The system will provide the user an interface for viewing pictures and video recordings. In addition, the interface will provide the user the ability to view and edit the monitoring calendar. Finally, the system will provide the user with the ability to arm and disarm the system.
+## Alert System
+5. The system will audibly notify the user and the surrounding area when the system has been armed and triggered.
+## Reporting System
+6. The system will send messages to the user when the system has been armed and triggered. Additionally, it will take user feedback in the event the trigger was a false alarm.
 
 # List of non-functional requirements
 TODO - Create unique requirement numbers. 
