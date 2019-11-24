@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+  <head>
+    <title>{{title}}</title>
+    <link rel = "stylesheet" href = "../static/style.css/">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+      <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+      <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+  </head>
+  <body>
+    <h1>Welcome!</h1>
+    <h2>The date and time on the server is: {{get_time}}</h2>
+    <p>
+      Armed: {{armed}}
+      <br>
+      LED Enabled: {{led_enabled}}
+      <br>
+      LED Color: {{led_color}}
+    </p>
+    
+  <!-- Toggle switch for armed and disarmed -->
+  <div class='status'>Armed</div>
+    <input type="checkbox" class='toggle' onchange="arm_disarm()" checked data-toggle="toggle" data-on="Armed" data-off="Disarmed" data-onstyle="success">
+  <!-- Button for google calendar -->
+    <br>
+    <p>Google Calendar</p>
+    <form action="https://calendar.google.com/calendar/b/5?cid=ZmF1Y2VuNTAzNUBnbWFpbC5jb20" method="get" target="_blank">
+      <button type="submit">Google Calendar</button>
+    </form>
+  </body>
+  <!-- Toggled switch for Armed and Disarmed -->
+  <script>
+  // When Armed - Button will be green
+  // When Disarmed - Button will be grey/disabled
+  $(function(){
+    $('#Toggle-One').bootstrapToggle({
+      on: 'Armed',
+      off: 'Disarmed'
+    });
+  })
+  // Toggle between Armed and Disarmed written underneath switch
+  // Might not need
+  $(document).ready(function(){
+    $('.toggle').click(function(){
+      var current_status = $('.status').text();
+      // Testing
+      $.ajax({
+        url: "/arm_disarm",
+        type: "get",
+          data: {status: current_status},
+            success: function(response) {
+              $(".status").html(response);
+            },
+        error: function(xhr) {
+          // Do something to handle error
+        }
+      });
+      // Displays the current status underneath toggle switch
+      if (current_status === 'Disarmed'){
+        $('.status').html('Armed');
+      }
+      else{
+        $('.status').html('Disarmed');
+      }
+    });
+  });
+  </script>
+</html>
