@@ -86,6 +86,7 @@ class SysClient:
 
     def arm_disarm(self, pin):
         try:
+            self._logger.debug("Sending arm_disarm with Pin " + str(pin))
             self._socket.send(json.dumps({'func': 'arm_disarm', 'pin': pin}).encode('utf-8'))
             packet = self._socket.recv(1024)
             self._logger.debug('received: {}'.format(packet))

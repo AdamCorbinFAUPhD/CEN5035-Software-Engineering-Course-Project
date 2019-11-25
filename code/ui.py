@@ -22,18 +22,21 @@ def status():
     return render_template("index.html", time=get_time(), armed=armed, led_color=led_color, led_enabled=led_enabled)
 
 
+@app.route("/arm_disarm")
 def arm_disarm():
     client = sys_client.get_client()
-    result = client.arm_disarm()
+    result = client.arm_disarm("123456")  # This is hard coded since its coming from the UI
+
     # Testing
-    current_status = flask.request.args.get('status')
+    # current_status = flask.request.args.get('status')
     # I'm not completely sure how to do this -- pseudocode for now
         # if current_status == armed
         # results == armed
         # else
         # results == disarmed
     # Demonstration of the backend, needs to be tested
-    return 'Armed' if current_status == 'Disarmed' else 'Disarmed'
+    return 'Armed' if result["result"] == 'true' else 'Disarmed'
+
 
 def get_time():
     return time()

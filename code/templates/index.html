@@ -20,8 +20,17 @@
     </p>
     
   <!-- Toggle switch for armed and disarmed -->
-  <div class='status'>Armed</div>
-    <input type="checkbox" class='toggle' onchange="arm_disarm()" checked data-toggle="toggle" data-on="Armed" data-off="Disarmed" data-onstyle="success">
+  <input id="toggle-arm_disarm" type="checkbox" class='toggle' onchange="arm_disarm()" checked data-toggle="toggle" data-on="Armed" data-off="Disarmed" data-onstyle="success">
+  <script>
+    $(function () {
+      let is_armed = '{{armed}}';
+      if(is_armed === "True") {
+        $("#toggle-arm_disarm").bootstrapToggle('on')
+      }else{
+        $("#toggle-arm_disarm").bootstrapToggle('off')
+      }
+    })
+  </script>
   <!-- Button for google calendar -->
     <br>
     <p>Google Calendar</p>
