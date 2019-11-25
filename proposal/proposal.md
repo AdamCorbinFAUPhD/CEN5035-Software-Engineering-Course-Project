@@ -75,6 +75,8 @@ TODO - Consider going back and seeing we need to add anymore definitions. Also p
 - Detect - System has found a disturbance
 - Monitor - the act of checking the sensors to see if the signals are out of normal range
 - Record - capturing video and or pictures
+- Sensing - This the period where the system has been Armed and the waiting period has lapsed. During this time
+if there has been activity spotted by the PIR then the alarm will be activated
 
 # Overview of Scenarios and Use Cases
 **Use Case: Enable Alarm**
