@@ -10,9 +10,10 @@
   </head>
   <body>
     <h1>Welcome!</h1>
-    <h2>The date and time on the server is: {{get_time}}</h2>
     <p>
       Armed: {{armed}}
+      <br>
+      Sensing: {{is_sensing}}
       <br>
       LED Enabled: {{led_enabled}}
       <br>
@@ -20,9 +21,19 @@
     </p>
     
   <!-- Toggle switch for armed and disarmed -->
-  <div class='status'>Armed</div>
-    <input type="checkbox" class='toggle' onchange="arm_disarm()" checked data-toggle="toggle" data-on="Armed" data-off="Disarmed" data-onstyle="success">
-  <!-- Button for Google Calendar -->
+
+  <input id="toggle-arm_disarm" type="checkbox" class='toggle' onchange="arm_disarm()" checked data-toggle="toggle" data-on="Armed" data-off="Disarmed" data-onstyle="success">
+  <script>
+    $(function () {
+      let is_armed = '{{armed}}';
+      if(is_armed === "True") {
+        $("#toggle-arm_disarm").bootstrapToggle('on')
+      }else{
+        $("#toggle-arm_disarm").bootstrapToggle('off')
+      }
+    })
+  </script>
+  <!-- Button for google calendar -->
     <br>
     <p>Google Calendar</p>
     <form action="https://calendar.google.com/calendar/b/5?cid=ZmF1Y2VuNTAzNUBnbWFpbC5jb20" method="get" target="_blank">

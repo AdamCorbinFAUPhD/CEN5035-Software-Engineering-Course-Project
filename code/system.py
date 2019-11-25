@@ -70,6 +70,7 @@ class System:
         # used for private functions
         # The 'self' indicates that this variable is an instance variable much like 'this' is used in other languages.
         self.is_armed = False
+        self.is_sensing = False  # is sensing is used to tell the system start looking for intruders
         # When arming a system, the system needs to give a delay in order to for the home owner to leave the house
         # without tripping the alarm system
         self._arm_time_delay = 5  # 1 * 60
@@ -211,7 +212,7 @@ class System:
             self._logger.debug('Falling event occurred')
             self.watson.send_movement_falling()
         elif pir_event.event_type == PirEventType.rising:
-            if self.is_armed:
+            if self.is_sensing:
                 # First event that has occurred when armed, activate alarm thread
                 if not self.alarm_active:
                     self.alarm_active = True
@@ -323,7 +324,8 @@ class System:
                     connection.send(json.dumps({'result': True}).encode('utf-8'))
                 elif func == 'status':
                     connection.send(json.dumps({'armed': self.is_armed, 'led_color': self.led.color.name,
-                                                'led_enabled': self.led.enabled}).encode('utf-8'))
+                                                'led_enabled': self.led.enabled,
+                                                "is_sensing": self.is_sensing}).encode('utf-8'))
         except socket.error as e:
             self._logger.error('{}'.format(e))
         except json.JSONDecodeError as e:
@@ -357,9 +359,11 @@ class System:
         self._logger.debug('stopped UI process')
 
     def _set_arm_after_delay(self):
-        self._logger.info("System has been set to armed")
-        self.is_armed = True
-        self.watson.send_armed()
+        # Its possible we could have the system disarmed right way so we need to ignore this request to start sensing
+        if self.is_armed:
+            self._logger.info("System has been set to armed")
+            self.is_sensing = True
+            self.watson.send_armed()
 
     def _arm(self, pin: str):
         # to create function documentation in pycharm simple type '"' three times and hit enter.
@@ -375,6 +379,7 @@ class System:
             self._invalid_entry_count = 0
             self.led.flash_led(color=LEDColor.GREEN, flash_count=5)
             self.led.turn_on(color=LEDColor.BLUE)
+            self.is_armed = True
             Timer(self._arm_time_delay, self._set_arm_after_delay).start()
             return True
         else:
@@ -420,6 +425,7 @@ class System:
                 self.reset_user_entry()
                 self._logger.info('System is now disarmed')
                 self.is_armed = False
+                self.is_sensing = False
                 self.watson.send_diarmed()
                 self.led.clear_led()
                 self.led.flash_led(color=LEDColor.GREEN, flash_count=5)

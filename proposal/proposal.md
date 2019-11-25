@@ -58,6 +58,7 @@ Our target audience will be for anyone who wants to have a security system that 
 |---|---|
 |X |Includes|
 |O |Excludes |
+
 TODO - Consider beefing this up a little. In the first example given in class they have 2 sections: 
 Competitive relationship and Competitive advantages
 
@@ -74,6 +75,8 @@ TODO - Consider going back and seeing we need to add anymore definitions. Also p
 - Detect - System has found a disturbance
 - Monitor - the act of checking the sensors to see if the signals are out of normal range
 - Record - capturing video and or pictures
+- Sensing - This the period where the system has been Armed and the waiting period has lapsed. During this time
+if there has been activity spotted by the PIR then the alarm will be activated
 
 # Overview of Scenarios and Use Cases
 **Use Case: Enable Alarm**
@@ -235,18 +238,20 @@ The following ports were opened up:
    * Setup of FileZilla
    * Screenshot of the settings of the server
    
-   ![](images/filezilla_settings.png)
+   ![](images/filezilla_settings.PNG)
    
 1. From putty you can run the python files by doing: "python3 file.py"
 
-    ![](images/putty_commands.png)
+    ![](images/putty_commands.PNG)
 1. If you need to make any changes do it from your local computer and then use FileZila to transfer the file over to retest
+
 ### Real VNC
 In the event that someone would like to remote into the Raspberry Pi desktop RealVNC was installed on the 
 Pi. In order for this to work on someones local computer, their email would need to be added to the 
 approved email list. Once added to the list, all thats needed is to download the local client to 
 communicate to the server on the Raspberry Pi.
-###Hardware build
+
+### Hardware build
 TODO- go into detail on what each item is used for
 List of components:
 * Raspberry Pi 2B+

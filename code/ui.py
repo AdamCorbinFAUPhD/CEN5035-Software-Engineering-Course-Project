@@ -15,37 +15,25 @@ def status():
     armed = None
     led_color = None
     led_enabled = None
+    is_sensing = None
     if data:
         armed = data['armed']
         led_color = data['led_color']
         led_enabled = data['led_enabled']
-    return render_template("index.html", time=get_time(), armed=armed, led_color=led_color, led_enabled=led_enabled)
+        is_sensing = data["is_sensing"]
+    return render_template("index.html", armed=armed,
+                           led_color=led_color,
+                           led_enabled=led_enabled,
+                           is_sensing=is_sensing)
 
 
+@app.route("/arm_disarm")
 def arm_disarm():
     client = sys_client.get_client()
-    result = client.arm_disarm()
-    # Testing
-    current_status = flask.request.args.get('status')
-    # I'm not completely sure how to do this -- pseudocode for now
-        # if current_status == armed
-        # results == armed
-        # else
-        # results == disarmed
-    # Demonstration of the backend, needs to be tested
-    return 'Armed' if current_status == 'Disarmed' else 'Disarmed'
+    result = client.arm_disarm("123456")  # This is hard coded since its coming from the UI
 
-def get_time():
-    return time()
+    return 'Armed' if result["result"] == 'true' else 'Disarmed'
 
-"""
-@app.route("/GoogleCalendar")
-def calendar():
-     # Create a button that will redirect to the Google calendar
-     # At the moment, not working -- need to add more
-        url = https://calendar.google.com/calendar/b/5?cid=ZmF1Y2VuNTAzNUBnbWFpbC5jb20
-     return redirect(url, code = 307)
-""" 
 
 def create_app():
     """
