@@ -21,6 +21,7 @@
     </p>
     
   <!-- Toggle switch for armed and disarmed -->
+
   <input id="toggle-arm_disarm" type="checkbox" class='toggle' onchange="arm_disarm()" checked data-toggle="toggle" data-on="Armed" data-off="Disarmed" data-onstyle="success">
   <script>
     $(function () {
@@ -37,6 +38,12 @@
     <p>Google Calendar</p>
     <form action="https://calendar.google.com/calendar/b/5?cid=ZmF1Y2VuNTAzNUBnbWFpbC5jb20" method="get" target="_blank">
       <button type="submit">Google Calendar</button>
+    </form>
+  <!-- Button for Watson Service -->
+    <br<
+    <p>Watson Service</p>
+    <form action="https://4j9rx2.internetofthings.ibmcloud.com/dashboard/boards/ec987cb4-3d6b-4aa1-bb63-9eeca3412eb6" method="get" target="_blank">
+      <button type="submit">Watson Service</button>
     </form>
   </body>
   <!-- Toggled switch for Armed and Disarmed -->
@@ -66,7 +73,7 @@
           // Do something to handle error
         }
       });
-      // Displays the current status underneath toggle switch
+      // Displays the current status above the toggle switch
       if (current_status === 'Disarmed'){
         $('.status').html('Armed');
       }
