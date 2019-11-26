@@ -32,20 +32,23 @@
       }
     })
   </script>
+  <!-- Display the live view without getting redirected to another page -->
+    
   <!-- Button for google calendar -->
+    <br>
     <br>
     <p>Google Calendar</p>
     <form action="https://calendar.google.com/calendar/b/5?cid=ZmF1Y2VuNTAzNUBnbWFpbC5jb20" method="get" target="_blank">
       <button type="submit">Google Calendar</button>
     </form>
   <!-- Button for Watson Service -->
-    <br<
+    <br>
+    <br>
     <p>Watson Service</p>
     <form action="https://4j9rx2.internetofthings.ibmcloud.com/dashboard/boards/ec987cb4-3d6b-4aa1-bb63-9eeca3412eb6" method="get" target="_blank">
       <button type="submit">Watson Service</button>
     </form>
   </body>
-  <!-- Toggled switch for Armed and Disarmed -->
   <script>
   // When Armed - Button will be green
   // When Disarmed - Button will be grey/disabled
@@ -55,7 +58,7 @@
       off: 'Disarmed'
     });
   })
-  // Toggle between Armed and Disarmed written underneath switch
+  // Update current status
   $(document).ready(function(){
     $('.toggle').click(function(){
       var current_status = $('.status').text();
