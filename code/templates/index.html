@@ -21,7 +21,6 @@
     </p>
     
   <!-- Toggle switch for armed and disarmed -->
-
   <input id="toggle-arm_disarm" type="checkbox" class='toggle' onchange="arm_disarm()" checked data-toggle="toggle" data-on="Armed" data-off="Disarmed" data-onstyle="success">
   <script>
     $(function () {
@@ -57,11 +56,9 @@
     });
   })
   // Toggle between Armed and Disarmed written underneath switch
-  // Might not need
   $(document).ready(function(){
     $('.toggle').click(function(){
       var current_status = $('.status').text();
-      // Testing
       $.ajax({
         url: "/arm_disarm",
         type: "get",
@@ -72,14 +69,10 @@
         error: function(xhr) {
           // Do something to handle error
         }
+        // Attempt to reload page without having to click refresh button
+        location.reload(true);
+        alert('Updating Page');
       });
-      // Displays the current status above the toggle switch
-      if (current_status === 'Disarmed'){
-        $('.status').html('Armed');
-      }
-      else{
-        $('.status').html('Disarmed');
-      }
     });
   });
   </script>
