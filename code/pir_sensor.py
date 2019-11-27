@@ -8,7 +8,7 @@ import logging
 """
 # PIR Sensor
 The PIR Sensor will be use to detect movement within a room. For this project we will be using the HC-SR501 PIR Motion
-Sensor. PIR stands for Passive Infra-red which means it doesnt use any energy to detect signals
+Sensor. PIR stands for Passive Infrared which means it doesnt use any energy to detect signals
 The PIR sensor consist of a main compost of the pyroelectric sensor which when exposed to heat generates an 
 electric signal. A warm body emits infrared radiation(IR) and this pyroelectric sensor picks up this IR signals. On top 
 of the pyroelectric sensor there is a fresnel lens bounces the IR signals onto the pyroelectric sensor.
