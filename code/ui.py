@@ -29,14 +29,12 @@ def index():
 
 @app.route("/status/", methods=['POST'])
 def status():
-    print("LOOK HERE")
     client = sys_client.get_client()
     data = client.get_status()
-    print("LOOK HERE AGAIN")
     return jsonify(data)
 
 
-@app.route("/arm_disarm/")
+@app.route("/arm_disarm/", methods=['POST'])
 def arm_disarm():
     client = sys_client.get_client()
     result = client.arm_disarm("123456")  # This is hard coded since its coming from the UI
