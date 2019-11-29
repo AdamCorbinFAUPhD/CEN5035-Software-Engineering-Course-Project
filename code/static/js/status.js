@@ -2,7 +2,7 @@ function fetchdata(){
             console.log("Hello");
                 $.ajax({
                 type : 'POST',
-                url : '/status'
+                url : '/status/'
             })
             .done(function(data) {
                 if (data.armed)
