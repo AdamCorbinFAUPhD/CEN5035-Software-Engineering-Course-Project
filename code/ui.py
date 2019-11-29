@@ -33,7 +33,7 @@ def status():
     client = sys_client.get_client()
     data = client.get_status()
     print("LOOK HERE AGAIN")
-    return data
+    return jsonify(data)
 
 
 @app.route("/arm_disarm/")
