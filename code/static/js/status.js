@@ -1,8 +1,8 @@
 function fetchdata(){
             alert("Hello");
                 $.ajax({
-                type : 'post'
-                url : '/status',
+                type : 'post',
+                url : '/status'
             })
             .done(function(data) {
                 if (data.armed)
