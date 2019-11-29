@@ -1,4 +1,5 @@
 function fetchdata(){
+            alert("Hello");
                 $.ajax({
                 type : 'post'
                 url : '/status',
