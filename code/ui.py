@@ -7,6 +7,7 @@ import sys_client
 
 app = Flask(__name__)
 
+
 @app.route("/")
 def index():
     client = sys_client.get_client()
@@ -26,26 +27,14 @@ def index():
                            is_sensing=is_sensing)
 
 
-@app.route("/")
+@app.route("/status", methods=['POST'])
 def status():
     client = sys_client.get_client()
     data = client.get_status()
-    armed = None
-    led_color = None
-    led_enabled = None
-    is_sensing = None
-    if data:
-        armed = data['armed']
-        led_color = data['led_color']
-        led_enabled = data['led_enabled']
-        is_sensing = data["is_sensing"]
-    return render_template("index.html", armed=armed,
-                           led_color=led_color,
-                           led_enabled=led_enabled,
-                           is_sensing=is_sensing)
+    return data
 
 
-@app.route("/arm_disarm", methods=['POST'])
+@app.route("/arm_disarm")
 def arm_disarm():
     client = sys_client.get_client()
     result = client.arm_disarm("123456")  # This is hard coded since its coming from the UI
