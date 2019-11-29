@@ -29,8 +29,10 @@ def index():
 
 @app.route("/status/", methods=['POST'])
 def status():
+    print("LOOK HERE")
     client = sys_client.get_client()
     data = client.get_status()
+    print("LOOK HERE AGAIN")
     return data
 
 
