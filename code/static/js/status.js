@@ -1,7 +1,7 @@
 function fetchdata(){
             console.log("Hello");
                 $.ajax({
-                type : 'post',
+                type : 'POST',
                 url : '/status'
             })
             .done(function(data) {
