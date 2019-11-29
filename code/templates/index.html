@@ -1,7 +1,7 @@
 <!DOCTYPE html>
   <head>
     <title>{{title}}</title>
-    <link rel="stylesheet" href="../static/style.css">
+    <link rel="stylesheet" href="./static/style.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
@@ -11,13 +11,13 @@
   <body>
     <h1>Welcome!</h1>
     <p>
-      Armed: {{armed}}
+      Armed: <div id="armedTag">{{armed}}</div>
       <br>
-      Sensing: {{is_sensing}}
+    Sensing:<div id="sensingTag">{{is_sensing}}</div>
       <br>
-      LED Enabled: {{led_enabled}}
+    LED Enabled:<div id="ledEnabledTag">{{led_enabled}}</div>
       <br>
-      LED Color: {{led_color}}
+    LED Color: <div id="ledColorTag">{{led_color}}</div>
     </p>
     
   <!-- Toggle switch for armed and disarmed -->
