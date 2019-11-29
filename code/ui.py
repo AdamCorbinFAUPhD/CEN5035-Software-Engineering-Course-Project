@@ -34,7 +34,7 @@ def status():
     return jsonify(data)
 
 
-@app.route("/arm_disarm/", methods=['POST'])
+@app.route("/arm_disarm/", methods=['GET', 'POST'])
 def arm_disarm():
     client = sys_client.get_client()
     result = client.arm_disarm("123456")  # This is hard coded since its coming from the UI
