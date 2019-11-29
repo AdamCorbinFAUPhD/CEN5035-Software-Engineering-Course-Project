@@ -1,5 +1,5 @@
 function fetchdata(){
-            alert("Hello");
+            console.log("Hello");
                 $.ajax({
                 type : 'post',
                 url : '/status'
