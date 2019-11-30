@@ -15,6 +15,7 @@ from notifications import Notifications
 from pir_event import PIREvent, PirEventType
 from pir_sensor import PirSensor
 from google_cal import Calendar
+from ultra_sonic_dist import UltraSonicDistanceSensor
 from watson_processing import Watson
 import camera
 import ui
@@ -115,14 +116,16 @@ class System:
         # Create the sub system items that the main system will monitor and control
         self.keypad = Keypad()
         self.led = LED()
-        self.pir_sensor = PirSensor()
+        self.event_queue = queue.Queue()
+        # self.pir_sensor = PirSensor(self.event_queue)  # Turned off for now due to interference
+        self.ultra_sonic_distance_sensor = UltraSonicDistanceSensor(self.event_queue)
         self.calendar = Calendar()
         self.watson = Watson()
         self.notifications = Notifications()
 
         # The web UI
         self._web_client = ui.create_app()
-        self._web_process = Process(target=self._web_client.run, args=('127.0.0.1', 5000))
+        self._web_process = Process(target=self._web_client.run, args=('0.0.0.0', 1234))
 
     def run(self):
         """
@@ -133,15 +136,23 @@ class System:
             sensor_t = Thread(target=self._sensor_thread, args=(), name="Sensor_Thread")
             self._threads.append(sensor_t)
             sensor_t.start()
+
             calendar_t = Thread(target=self._calendar_thread, args=(), name="Calendar_Thread")
             self._threads.append(calendar_t)
             calendar_t.start()
+
             k_thread = Thread(target=self.keypad.capture_keypress, args=(), name="Keypad_Thread")
             self._threads.append(k_thread)
             k_thread.start()
+
             alarm_t = Thread(target=self._alarm_thread, args=(), name="Alarm_Thread")
             self._threads.append(alarm_t)
             alarm_t.start()
+
+            ultra_sonic_thread = Thread(target=self.ultra_sonic_distance_sensor.monitor_distance, args=(), name="Ultra_Sonic_Thread")
+            self._threads.append(ultra_sonic_thread)
+            ultra_sonic_thread.start()
+
             self._web_process.start()
             self._main_thread()
             self._logger.info('web client has started')
@@ -264,7 +275,7 @@ class System:
             needed to handle the normal case when no event is in the queue
             """
             try:
-                pir_event = self.pir_sensor.event_queue.get_nowait()
+                pir_event = self.event_queue.get_nowait()
                 self._process_pir_event(pir_event)
             except queue.Empty:
                 pass

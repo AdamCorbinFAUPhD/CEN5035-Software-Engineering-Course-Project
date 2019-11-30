@@ -6,7 +6,7 @@ import time
 
 GPIO.setmode(GPIO.BCM)
 
-PIR_PIN = 19
+PIR_PIN = 26
 GPIO.setup(PIR_PIN, GPIO.IN)
 
 

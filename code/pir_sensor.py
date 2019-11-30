@@ -91,11 +91,11 @@ class PirSensor:
     event_queue: Queue
         Pass in the timestamp and whether it was a Rising or Falling detection
     """
-    def __init__(self):
+    def __init__(self, event_queue):
         GPIO.setmode(GPIO.BCM)
         self._logger = logging.getLogger('AlarmSystem.pir_sensor')
-        self._PIR_PIN = 19
-        self.event_queue = Queue()  # Uses the PirEvent class to pass the messages
+        self._PIR_PIN = 26
+        self.event_queue = event_queue  # Uses the PirEvent class to pass the messages
 
         GPIO.setup(self._PIR_PIN, GPIO.IN)
         # Adding a debounce time of 100ms just to insure we dont have a double trigger of a detection
