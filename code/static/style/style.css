@@ -2,8 +2,5 @@ body {
   background-color: grey;
   color: black;
   text-align: center;
-}
-
-p {
-  text-align: center;
+  align-context: center;
 }
