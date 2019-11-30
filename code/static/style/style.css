@@ -4,3 +4,8 @@ body {
   text-align: center;
   align-context: center;
 }
+
+.inline {
+  display:inline-block;
+  margin-right:5px;
+}
