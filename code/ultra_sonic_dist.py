@@ -36,7 +36,7 @@ class UltraSonicDistanceSensor:
 
         pulse_duration = pulse_end_time - pulse_start_time
         distance_cm = round(pulse_duration * 17150, 2)
-        self._logger.debug('distance_cm' + str(distance_cm))
+        # self._logger.debug('distance_cm' + str(distance_cm))
         return distance_cm
 
     def monitor_distance(self):
