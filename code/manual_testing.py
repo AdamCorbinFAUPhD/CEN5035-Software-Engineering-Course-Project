@@ -54,10 +54,10 @@ class ManualTesting:
             self.print_actions()
         elif user_entry == "11":
             print("Sending Rising event")
-            self.system.pir_sensor.event_queue.put(PIREvent(time=time.time(), event_type=PirEventType.rising))
+            self.system.event_queue.put(PIREvent(time=time.time(), event_type=PirEventType.rising))
         elif user_entry == "12":
             print("Sending Falling event")
-            self.system.pir_sensor.event_queue.put(PIREvent(time=time.time(), event_type=PirEventType.falling))
+            self.system.event_queue.put(PIREvent(time=time.time(), event_type=PirEventType.falling))
         elif user_entry == "0" or user_entry == "1" or user_entry == "2" or user_entry == "3" or user_entry == "4" \
                 or user_entry == "5" or user_entry == "6" or user_entry == "7" or user_entry == "8" \
                 or user_entry == "9" or user_entry == "#":

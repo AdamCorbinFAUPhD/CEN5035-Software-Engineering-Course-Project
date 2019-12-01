@@ -53,7 +53,7 @@ class SystemIntegrationTesting:
         self.test(expected=True, actual=self.system_to_test.is_armed)
 
         # Test case #### for triggering alarm
-        self.system_to_test.pir_sensor.event_queue.put(PIREvent(time=time.time(), event_type=PirEventType.rising))
+        self.system_to_test.event_queue.put(PIREvent(time=time.time(), event_type=PirEventType.rising))
         sleep(1)
         self.test(expected=True, actual=self.system_to_test.alarm_active)
 
