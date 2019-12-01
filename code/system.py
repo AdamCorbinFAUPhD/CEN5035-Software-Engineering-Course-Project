@@ -84,7 +84,7 @@ class System:
         # When user incorrectly enters in the pass code 4 times the system gets locked for 5min
         self.system_locked = False
         self._lock_time = 0
-        self._lockout_duration = 5 * 60  # currently set to 5 min but might consider less for testing
+        self._lockout_duration = 10  # * 60  # currently set to 5 min but might consider less for testing
         self._pin_entry_max_timeout = 10  # Unit in seconds
         self._max_invalid_entry_before_system_lock = 4
         self.alarm_active = False
@@ -294,7 +294,7 @@ class System:
                 self._socket.listen(5)
                 connection = self._socket.accept()
                 if connection is not None:
-                    self._logger.info("Received connection")
+                    # self._logger.info("Received connection")
                     # create new thread an pass it the connection
                     t = Thread(target=self._connection_thread, args=(connection[0],))
                     self._threads.append(t)
@@ -376,6 +376,10 @@ class System:
             self.is_sensing = True
             self.watson.send_armed()
 
+    def _turn_off_led_after_system_unlocked(self):
+        self.system_locked = False
+        self.led.turn_off()
+
     def _arm(self, pin: str):
         # to create function documentation in pycharm simple type '"' three times and hit enter.
         """
@@ -406,6 +410,7 @@ class System:
             self.system_locked = True
             self.notifications.send_locked_message()
             self._logger.info('System is locked')
+            Timer(self._lockout_duration, self._turn_off_led_after_system_unlocked).start()
         else:
             turn_alarm_back_on = False
             # Handing the case where the alarm is active and we need to notify the user they entered in an incorrect pin
