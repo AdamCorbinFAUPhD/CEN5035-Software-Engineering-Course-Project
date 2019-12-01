@@ -378,7 +378,7 @@ class System:
 
     def _turn_off_led_after_system_unlocked(self):
         self.system_locked = False
-        self.led.turn_off()
+        self.led.turn_off(color=LEDColor.RED)
 
     def _arm(self, pin: str):
         # to create function documentation in pycharm simple type '"' three times and hit enter.
