@@ -392,6 +392,7 @@ class System:
             self.led.turn_on(color=LEDColor.BLUE)
             self.is_armed = True
             Timer(self._arm_time_delay, self._set_arm_after_delay).start()
+            self.notifications.send_armed_message()
             return True
         else:
             return self.invalid_pin_entry()
@@ -403,6 +404,7 @@ class System:
             self.led.turn_on(color=LEDColor.RED)
             self._lock_time = time()
             self.system_locked = True
+            self.notifications.send_locked_message()
             self._logger.info('System is locked')
         else:
             turn_alarm_back_on = False
@@ -441,6 +443,7 @@ class System:
                 self.led.clear_led()
                 self.led.flash_led(color=LEDColor.GREEN, flash_count=5)
                 self._invalid_entry_count = 0
+                self.notifications.send_disarmed_message()
                 return True
             else:
                 return self.invalid_pin_entry()
