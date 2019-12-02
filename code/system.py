@@ -378,6 +378,7 @@ class System:
 
     def _turn_off_led_after_system_unlocked(self):
         self.system_locked = False
+        self._invalid_entry_count = 0
         self.led.turn_off(color=LEDColor.RED)
 
     def _arm(self, pin: str):

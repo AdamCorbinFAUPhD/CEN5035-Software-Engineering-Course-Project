@@ -53,7 +53,7 @@ class SysClient:
         try:
             self._socket.send(json.dumps({'func': 'status'}).encode('utf-8'))
             packet = self._socket.recv(1024)
-            self._logger.debug('received: {}'.format(packet))
+            # self._logger.debug('received: {}'.format(packet))
             data = json.loads(packet.decode('utf-8'))
             if data is not None and isinstance(data, dict):
                 return data
@@ -141,4 +141,4 @@ class SysClient:
         Shutdown this instance
         """
         self._socket.close()
-        self._logger.info('client closed')
+        # self._logger.info('client closed')
