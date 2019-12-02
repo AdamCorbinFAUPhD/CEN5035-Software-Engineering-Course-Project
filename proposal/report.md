@@ -432,6 +432,7 @@ TODO - add any considerations
 
 ## Class Diagrams
 ### System class
+TODO add the rest of the class diagrams
 ![](images/system.png)
 
 ## Development Environment setup
