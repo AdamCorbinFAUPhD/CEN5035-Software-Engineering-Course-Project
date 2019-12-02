@@ -417,10 +417,7 @@ and can support many different types of cameras. It was not designed specificall
 plugins to help communicate to the cameras. Its intended platform is Linux based and was also intended to be used as a 
 way to monitor multiple cameras. Project website: https://motion-project.github.io/motion_config.html
 
-TODO_AC - add how it was installed
-
-TODO_AC - Add what configurations needed to be updated in order to get working
-To start the video stream run “sudo motion -b”
+This library was used to capture images from the PS3 eye and also record video when requested. When viewing the live stream the image will update once a second. Because the Raspberry Pi doesn't have a strong CPU, the stream only updates the image once a second. It is possible to update to have more frames per second but based on the research the Raspberry Pi can get bogged down quickly and we don't want this library to interfere with the main security system.
 
 ### Flask framework
 TODO - Add details as to why Flask was chosen
