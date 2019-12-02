@@ -275,6 +275,10 @@ experiment there needs to be an LED connected from the output pin to he ground p
 the LED will then turn on when IR signals have triggered the PIR Sensor. This was a good way to test out the PIR Sensor
 before adding any of the complexity of the Raspberry Pi.
 
+#### Interference
+Late into the project we experienced some weird behaviors where the PIR sensor would keep triggering movement even though there was
+no movement in the room. After some research it looked like it could have been the Raspberry Pi Bluetooth module and/or the WiFi module causing interference. Turning off the Bluetooth module did not help and and we needed to have the WiFi on in order to connect to the internet. That being said we decided to add in another monitoring sensor as a back up which was the Ultrasonic Sound Distance Sensor.
+
 Source for some of this data: https://www.youtube.com/watch?v=ZC_sEW3_694
 
 ### 4x4 Membrane Matrix Switch
@@ -314,8 +318,12 @@ Raspberry Pi to make sure it would get enough current to support driving the PS3
 \caption{PS3 Eye}
 \end{figure}
 
-### Ultrasonic Distance Sensor
--TODO fill in details 
+### Ultrasonic Sound Distance Sensor(HC-SR04)
+The HC-SR04 was a late addition to the hardware components but was required due to challenges with the PIR sensor which was highlighted in the PIR Sensor section. The Ultrasonic Sound Distance sensor is an amazing little device that uses sound to measure distance to the 3mm resolution. It can measure distances between 2cm and up to 4m or 13 feet which is perfect for our prototype.
+
+#### How it works
+The Ultrasonic Sound Sensory works by shooting out 40kHz sound from 1 speaker and then listening using the other speaker for the sound to return. Using the speed of sound we can calculate how far an object is from the sensor. There are 4 pins on the device: ground, vcc(5v power), echo, and trigger. In the software the Trigger pin is set to high for 1 microsecond, then we measure the time it takes for the echo pin to go from low to high and back to low. We can calculate the distance with the following formula
+distance = time * speed.  We know the time in micro seconds. The speed is the speed of sound which is 340 m/s. We can then use this formula to calculate the distance in cm: distance = measured_time * 34300/2. We divide by 2 since the distance was down and back.
 
 ![](images/ultra_sonic_sensor.png)\
 \begin{figure}[!h]
@@ -360,19 +368,19 @@ Here are some pictures of the graphs that Watson creates
 
 #### Challenges
 
-Ideally it would be nice to embed these graphs in our user interface but it doesnt look like Watson has the capability
+Ideally it would be nice to embed these graphs in our user interface but it doesn't look like Watson has the capability
 to share these graphs publicly. The only way you can view them is to be on an authorized email list and you have to
 login to IBM's Watson system.
 
 #### Considerations
 
 For the Smart Security system we considered using voice activation to arm and disarm the system but in the end it seemed
-like a security risk in the event that it didnt function properly or if an unauthorized user found out about the verbal
+like a security risk in the event that it didn't function properly or if an unauthorized user found out about the verbal
 pass code. Possibly in the future when Watson can self identify someone based on their void then this could be a great
 feature to add to this Smart Security System
 
 ###  Google Calendar as smart enable system
-The concept of the Smart Security System would to leverage the use of hte Google Calendar to know when the system should
+The concept of the Smart Security System would to leverage the use of the Google Calendar to know when the system should
 be monitoring for intruders. The system will periodically monitory for calendar updates. It will also activate and
 deactivate the alarm system based on which events are running.
 
@@ -406,7 +414,7 @@ could be activated automatically.
 Since the semester is a short time frame our team tried to leverage as much open source software as much as possible. 
 Our initial setup of getting the PS3 Eye Camera working used a library called motion. This library is highly configurable 
 and can support many different types of cameras. It was not designed specifically for the Raspberry Pi but has supporting 
-plugins to help communicate to the cameras. Its intended platform is linux based and was also intended to be used as a 
+plugins to help communicate to the cameras. Its intended platform is Linux based and was also intended to be used as a 
 way to monitor multiple cameras. Project website: https://motion-project.github.io/motion_config.html
 
 TODO_AC - add how it was installed
@@ -448,7 +456,7 @@ The following ports were opened up:
 * Port 2022 for SSH communications
 * Port 5901 for VNC
 * Port 8081 for camera streaming using motion
-### Workflow to editing and testing out code
+### Work flow to editing and testing out code
 1. Locally clone repo from https://github.com/AdamCorbinFAUPhD/CEN5035-Software-Engineering-Course-Project
 1. Make changes to the files if necessary 
 1. Send files using FileZilla
