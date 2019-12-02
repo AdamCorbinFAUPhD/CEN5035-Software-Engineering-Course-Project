@@ -320,8 +320,10 @@ The intention would be there is a separate thread that would process the keys us
 
 ## Outputs
 ### LED Module
-
-
+The LED module is the main localized visual to let the system owner know what the system is doing. This LED will give live feedback in
+the event the user enters the PIN from the keypad acknowledging of a successful entry or a bad entry. This is an RGB led that allows
+for red, green, blue or any combination of the colors to represent status of the system. It was found out that the only combination of colors that was dent was green and red to make yellow.
+TODO add screenshot of led module
 
 ## Services
 
@@ -411,6 +413,7 @@ To start the video stream run “sudo motion -b”
 ### Flask framework
 TODO - Add details as to why Flask was chosen
 TODO - add details how it works & how it interacts with the main system
+TODO - Add screenshots of the UI
 TODO - add any considerations we might have
 
 ### Twilio notifications
