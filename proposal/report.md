@@ -6,7 +6,7 @@ author: >
     Malia Kency
     Stincii Dumerjean
     Jared Peterson 
-date: September 2019
+date: December 2019
 include-before:
 - '`\newpage{}`{=latex}'
 toc: true
@@ -27,6 +27,7 @@ header-includes: |
 | **Description** | **Date** | **Revision number** |
 | --- | --- | --- |
 | Initial proposal submission | 9/27/2019 | v1 |
+| Final report submission | 12/4/2019 | v2 |
 |   |   |   |
 
 \newpage{}
@@ -190,6 +191,7 @@ if there has been activity spotted by the PIR then the alarm will be activated
 \caption{System Architecture }
 \end{figure}
 Link:[https://www.draw.io/#G1RfKGCpj4uxjit77ksxuVJuZhFB1gMUyB](https://www.draw.io/#G1RfKGCpj4uxjit77ksxuVJuZhFB1gMUyB)
+TODO - update the graph to remove the buzzer and speaker and alexa. Add the Ultrasonic sensor in the Motion Detection system
 TODO - Explain text based on the interactions between the sub-systems
 
 ![](images/activity_diagram_keypad_and_sensors.png)\
@@ -218,14 +220,12 @@ representing if the sensor has detected anything. 5v being that the sensor has d
 IR signals. The power is expected to use 5v-20v input with 65mA current consumption.  
 
 #### Adjusting the PIR Sensor
-<br>
 The PIR Sensor module has 2 potentiometers.
 1. Adjusting the sensitivity of the sensor to reach up tp 7 meters 
 2. Adjusting the time the output signal stays high when IR signals have been detected The time can be adjusted between
 0.3 seconds to 5 minutes.
 
 #### Trigger modes
-<br>
 The PIR Sensor module has a set of 3 pins to select the different types of trigger modes. 
 1. Non-repeatable trigger mode : This is when the PIR Sensor has been triggered and the output time has lapsed, the 
 output signal will automatically go back to zero 
@@ -235,7 +235,6 @@ In a security system the Repeatable trigger mode is what we are looking for. For
 light for night where you might only want to have it on for a short period of time.
 
 #### PIR Sensor stabilization 
-<br>
 The PIR Sensor when powering up need to have about a minute to stabilize to adjust to the area before any valid outputs 
 will occur. The average IR gets computed during this time and when a warm body comes into range, thats where the spike 
 of IR signal will occur causing the PIR Sensor to signal activity has occurred. 
@@ -248,7 +247,6 @@ will make it only active in the dark. There is another place to add a thermal se
 PIR Motion Sensor.
 
 #### Initial testing
-
 Before connecting up the Raspberry Pi this PIR Sensor can be tested without reading the output values pin. To do this
 experiment there needs to be an LED connected from the output pin to he ground pin. After the PIR Sensor has stabilized
 the LED will then turn on when IR signals have triggered the PIR Sensor. This was a good way to test out the PIR Sensor
@@ -257,7 +255,6 @@ before adding any of the complexity of the Raspberry Pi.
 Source for some of this data: https://www.youtube.com/watch?v=ZC_sEW3_694
 
 ### 4x4 Membrane Matrix Switch
-
 In typical security systems the Smart Security System needed a physical device for a user to arm and disarm the security system.
 The sensor kit that we used had a 4x4 membrane matrix switch that would work perfectly in our prototype. 
 
@@ -403,9 +400,12 @@ TODO - add any considerations
 ![](images/system.png)
 
 ## Development Environment setup
-TODO go into how we have remote people and we needed a way for people to test the hardware
+Since our team was made up of people in many different locations we needed a good way to communicate, develop, and test our system. 
+For our source control and task management, we used GitHub. It was a nice way to organize our work and prioritize what needed to get done.
+In order to use the actual Raspberry Pi remotely there needed to be some channels opened up to allow for file transfer and remote access.
+FTP/SSH was opened up for that purpose and VNC was enabled for remote access to the Raspberry Pi.
 ### Tools
-* Filezilla - File transfer system to move files from a local computer to the remote Raspberry P
+* Filezilla - File transfer system to move files from a local computer to the remote Raspberry Pi
 * Putty or any SSH program - This program is used to tunnel into the terminal of the Raspberry Pi which would be used to run scripts
 * Python file editor like Notepad++ or PyCharm - This is intended to be used to create the python files on your local host. Because some of the scripts need hardware outputs, most might only be able to be tested using the remote Raspberry Pi
 * Real VNC client - This will be used if someone wants to visually see the Raspberry Pi desktop. In most cases this might not be needed but its good to have this option available
