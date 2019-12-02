@@ -303,7 +303,11 @@ The intention would be there is a separate thread that would process the keys us
 \end{figure}
 
 ### Playstation Eye Camera
--TODO fill in details about camera
+When looking for camera modules for the Raspberry Pi there were many different options. Some camera modules used the on board camera
+connections but they ended up being more expensive. It was a surprise that the PS3 Eye which was intended for the Playstation 3 for
+their motion controllers were the lowest cost at $10 and they had support for the Raspberry Pi's using the motion library. This made 
+an easy decision and was relatively easy to integrate with the Raspberry Pi. We did have to end up upgrading the USB Power supply to 
+Raspberry Pi to make sure it would get enough current to support driving the PS3 Eye.
 
 ![](images/ps3_eye.png)\
 \begin{figure}[!h]
