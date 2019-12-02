@@ -158,17 +158,22 @@ if there has been activity spotted by the PIR then the alarm will be activated
 # High-Level functional requirements
 ## Detection System
 - **HLR.REQ-1** - The system shall monitor user designated areas for any signs of movement when the system has been armed.
+
 ## Automated Monitoring Calendar
 - **HLR.REQ-2** - The system shall provide the user with a calendar that can be utilized to schedule times when the system should arm and disarm automatically.
+
 ## Recording System
 - **HLR.REQ-3** - The system shall stream video, and audio from an area designated by the user. 
 - **HLR.REQ-4** - The system shall capture pictures and record audio/video when the system has been armed and triggered.
+
 ## User Interface
 - **HLR.REQ-5** - The system shall provide the user an interface for viewing pictures and video recordings. 
 - **HLR.REQ-6** - The interface shall provide the user the ability to view and edit the monitoring calendar. 
 - **HLR.REQ-7** - The system shall provide the user with the ability to arm and disarm the system.
+
 ## Alert System
 - **HLR.REQ-8** - The system shall audibly notify the user and the surrounding area when the system has been armed and triggered.
+
 ## Reporting System
 - **HLR.REQ-9** - The system shall send messages to the user when the system has been armed and triggered. 
 
