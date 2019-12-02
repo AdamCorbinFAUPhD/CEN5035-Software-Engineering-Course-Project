@@ -35,11 +35,11 @@ header-includes: |
 # Executive Summary
 Our group project during the Fall 2019 semester in CEN 5035 Software Engineering will be a Smart Security System. We have found there is a lack of flexibility to set up schedules for a security system which lead us down this path. We are looking to solve this problem by having an easily configurable way to schedule when the alarm should be enabled or disabled. This system will also have the standard features of a typical alarm system.
 
-The Smart Security System breaks away from the competition in its  ability to connect to and utilize with the owner’s digital calendar to automatically create a detection schedule.This system will also have voice controlled activation which can be used to arm and disarm the system through an Alexa or Google home device. To reduce the risk of  failure, the system will also have a backup keypad to enable or disable the detection system in the event that voice was not sufficient.
+The Smart Security System breaks away from the competition in its  ability to connect to and utilize with the owner’s digital calendar to automatically create a detection schedule. To reduce the risk of  failure, the system will also have a backup keypad to enable or disable the detection system in the event the Google Calendar schedule was not enough.
 
 The security system will include cutting edge passive infrared motion sensing technology to be able to detect any movement in the desired location. The alarm warning system will announce that a break in has been detected and the authorities have been notified to ward off intruders. For added security, the system will capture images, video and audio to relay back to the system owner and or authorities should a break-in occur. The system will also have the ability to confirm if an event was real or not using SMS text and/or phone call notifications. Giving the owner a short time frame to disregard the event before the authorities are notified.
 
-Finally the system will have a password secured web interface to be able to view and update the monitoring schedule. The web system will provide the user the ability to activate or disarm the alarm and view a live stream of their camera at any given time. 
+Finally the system will have a secured web interface to be able to view and update the monitoring schedule through the Google Calendar. The web system will provide the user the ability to activate or disarm the alarm and view a live stream of their camera at any given time. 
 
 Our target audience will be for anyone who wants to have a security system that has a busy schedule where they might be traveling often. This will help ensure that the alarm system will always be active when the home owner is away. 
 \newpage{}
@@ -68,17 +68,17 @@ An advantage that our Smart Security System is that the system will be able to c
 # Data Definition
 TODO - Consider going back and seeing we need to add anymore definitions. Also probably need to go into a little more detail
  
-- Enable/arm - Turning the system on to monitor for intruders
-- Active - Currently monitoring for intruders
-- Disable - The system inactive and not monitoring for motion
-- Disarm - The act acknowledging the system of a false alarm
-- Notification - sending an alert to the system owner
-- System owner - User in control of the system who can enable/disable the system
-- Detect - System has found a disturbance
-- Monitor - the act of checking the sensors to see if the signals are out of normal range
-- Record - capturing video and or pictures
+- Enable/arm - Turning the system on to monitor for intruders.
+- Active - Currently the system monitoring for intruders or any disturbance from the motion sensors.
+- Disarm - The act acknowledging the system of a false alarm or making the system inactive meaning that the system is no 
+monitoring for movement.
+- Notification - sending an alert through a SMS/MMS to the system owner.
+- System owner - User in control of the system who can enable/disable the system.
+- Detect - System has found a disturbance from one of the motion sensors.
+- Monitor - the act of checking the sensors to see if the signals are out of normal range.
+- Record - Using the PS3 Eye to captur video and or pictures and save it to the system.
 - Sensing - This the period where the system has been Armed and the waiting period has lapsed. During this time
-if there has been activity spotted by the PIR then the alarm will be activated
+if there has been activity spotted by the PIR then the alarm will be activated.
 - Locked - The system we become locked upon 4 incorrect pin entries.
 
 # Overview of Scenarios and Use Cases
@@ -162,36 +162,46 @@ if there has been activity spotted by the PIR then the alarm will be activated
 
 ## Automated Monitoring Calendar
 - **HLR.REQ-2** - The system shall provide the user with a calendar that can be utilized to schedule times when the system should arm and disarm automatically.
+- **HLR.REQ-31** - The system shall be able to detect new calendar events within 10 seconds.
 
 ## Recording System
 - **HLR.REQ-3** - The system shall stream video, and audio from an area designated by the user. 
 - **HLR.REQ-4** - The system shall capture pictures and record audio/video when the system has been armed and triggered.
 
 ## User Interface
-- **HLR.REQ-5** - The system shall provide the user an interface for viewing pictures and video recordings. 
-- **HLR.REQ-6** - The interface shall provide the user the ability to view and edit the monitoring calendar. 
+- **HLR.REQ-5** - The user interface shall have the ability to view the live stream. 
+- **HLR.REQ-6** - The interface shall provide the user the ability to view and edit the monitoring calendar from the Google Calendar. 
 - **HLR.REQ-7** - The system shall provide the user with the ability to arm and disarm the system.
+- **HLR.REQ-28** - The user interface shall provide the color and enabled status of the LED
+- **HLR.REQ-29** - The user interface shall have a link to the Watson service
 
 ## Alert System
-- **HLR.REQ-8** - The system shall flash the LED green 5 times and then lock on blue for a succesul arming of the system.
+- **HLR.REQ-8** - The system shall flash the LED green 5 times and then lock on blue for a successful arming of the system.
 - **HLR.REQ-22** - The system shall flash the LED green 5 times and the shut off the LED for a successful disarming of the system.
-- **HLR.REQ-23** - The System shall flash the LED yellow 2 times when the pin was incorretly entered
+- **HLR.REQ-23** - The System shall flash the LED yellow 2 times when the pin was incorrectly entered
 - **HLR.REQ-24** - The system shall continue to flash red when the system alarm becomes activated
-- **HLR.REQ-24** - The system shall turn the LED on red when the system becomes locked
+- **HLR.REQ-26** - The system shall become locked when the PIN was incorrectly entered 4 times in a row
+- **HLR.REQ-27** - The system shall remain locked for 5 minutes when the system becomes locked. 
+- **HLR.REQ-25** - The system shall turn the LED on red when the system becomes locked
 
 ## Reporting System
 - **HLR.REQ-9** - The system shall send messages to the user when the system has been armed and triggered. 
 - **HLR.REQ-19** - The notifications shall have an image capture when the trigger happened, the date & time, and a link to the stream.
-- **HLR.REQ-20** - The system shall send a notificaion when the system has been armed.
-- **HLR.REQ-21** - The system shall send a notificaion when the system has been disarmed.
+- **HLR.REQ-20** - The system shall send a notification when the system has been armed.
+- **HLR.REQ-21** - The system shall send a notification when the system has been disarmed.
 
+## Watson 
+- **HLR.REQ-30** - The system shall send the following events to the Watson service to be able to graph:
+  - Arming/Disarming the system
+  - System Alarm triggered
+  - Motion detected
 
 # List of non-functional requirements
 
 - **HLR.REQ-10** - The system shall report and handle when any and all components are disconnected or unavailable.
 - **HLR.REQ-11** - The system shall handle erroneous inputs from the user.
 - **HLR.REQ-12** - The system shall be secure and enforce secure password requirements on the user.
-- **HLR.REQ-13** - The system shall be easy to learn, taking no more than 15 minutes for new users to start utilizing all of the system&#39;s features.
+- **HLR.REQ-13** - The system shall be easy to learn, taking no more than 15 minutes for new users to start utilizing all of the system's features.
 - **HLR.REQ-14** - The user interface shall be capable of being accessed from any device with internet access.
 - **HLR.REQ-15** - The system shall be able to recover from a temporary total power loss.
 - **HLR.REQ-16** - The system shall restrict read/write/modify access to video/audio streams,  pictures, video/audio recording to the owning user.
@@ -463,4 +473,3 @@ TODO go into the auto testing
 2. Malia Kency: Individual Contributor
 3. Stincy Dumerjean: Individual Contributor
 4. Jared Peterson: Scrum Master
-
