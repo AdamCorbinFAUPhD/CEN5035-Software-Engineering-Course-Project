@@ -79,6 +79,7 @@ TODO - Consider going back and seeing we need to add anymore definitions. Also p
 - Record - capturing video and or pictures
 - Sensing - This the period where the system has been Armed and the waiting period has lapsed. During this time
 if there has been activity spotted by the PIR then the alarm will be activated
+- Locked - The system we become locked upon 4 incorrect pin entries.
 
 # Overview of Scenarios and Use Cases
 **Use Case: Enable Alarm**
@@ -172,10 +173,17 @@ if there has been activity spotted by the PIR then the alarm will be activated
 - **HLR.REQ-7** - The system shall provide the user with the ability to arm and disarm the system.
 
 ## Alert System
-- **HLR.REQ-8** - The system shall audibly notify the user and the surrounding area when the system has been armed and triggered.
+- **HLR.REQ-8** - The system shall flash the LED green 5 times and then lock on blue for a succesul arming of the system.
+- **HLR.REQ-22** - The system shall flash the LED green 5 times and the shut off the LED for a successful disarming of the system.
+- **HLR.REQ-23** - The System shall flash the LED yellow 2 times when the pin was incorretly entered
+- **HLR.REQ-24** - The system shall continue to flash red when the system alarm becomes activated
+- **HLR.REQ-24** - The system shall turn the LED on red when the system becomes locked
 
 ## Reporting System
 - **HLR.REQ-9** - The system shall send messages to the user when the system has been armed and triggered. 
+- **HLR.REQ-19** - The notifications shall have an image capture when the trigger happened, the date & time, and a link to the stream.
+- **HLR.REQ-20** - The system shall send a notificaion when the system has been armed.
+- **HLR.REQ-21** - The system shall send a notificaion when the system has been disarmed.
 
 
 # List of non-functional requirements
