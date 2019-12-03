@@ -37,9 +37,7 @@ Our group project during the Fall 2019 semester in CEN 5035 Software Engineering
 
 The Smart Security System breaks away from the competition in its  ability to connect to and utilize with the owner’s digital calendar to automatically create a detection schedule. To reduce the risk of  failure, the system will also have a backup keypad to enable or disable the detection system in the event the Google Calendar schedule was not enough.
 
-The security system will include cutting edge passive infrared motion sensing technology to be able to detect any movement in the desired location. The alarm warning system will announce that a break in has been detected and the authorities have been notified to ward off intruders. For added security, the system will capture images, video and audio to relay back to the system owner and or authorities should a break-in occur. The system will also have the ability to confirm if an event was real or not using SMS text and/or phone call notifications. Giving the owner a short time frame to disregard the event before the authorities are notified.
-
-Finally the system will have a secured web interface to be able to view and update the monitoring schedule through the Google Calendar. The web system will provide the user the ability to activate or disarm the alarm and view a live stream of their camera at any given time. 
+The security system will include cutting edge passive infrared motion sensing technology to be able to detect any movement in the desired location. For added security, the system will capture images, video and audio to relay back to the system owner and or authorities should a break-in occur. The system will also have the ability to disable the alarm from the web interface. Giving the owner a short time frame to disregard the event before the authorities are notified.Finally the system will have a secured web interface to be able to view and update the monitoring schedule through the Google Calendar. The web system will provide the user the ability to activate or disarm the alarm and view a live stream of their camera at any given time. 
 
 Our target audience will be for anyone who wants to have a security system that has a busy schedule where they might be traveling often. This will help ensure that the alarm system will always be active when the home owner is away. 
 \newpage{}
@@ -198,12 +196,9 @@ if there has been activity spotted by the PIR then the alarm will be activated.
 
 # List of non-functional requirements
 
-- **HLR.REQ-10** - The system shall report and handle when any and all components are disconnected or unavailable.
 - **HLR.REQ-11** - The system shall handle erroneous inputs from the user.
-- **HLR.REQ-12** - The system shall be secure and enforce secure password requirements on the user.
 - **HLR.REQ-13** - The system shall be easy to learn, taking no more than 15 minutes for new users to start utilizing all of the system's features.
 - **HLR.REQ-14** - The user interface shall be capable of being accessed from any device with internet access.
-- **HLR.REQ-15** - The system shall be able to recover from a temporary total power loss.
 - **HLR.REQ-16** - The system shall restrict read/write/modify access to video/audio streams,  pictures, video/audio recording to the owning user.
 - **HLR.REQ-17** - The system shall respond to user reporting feedback within 60 seconds.
 - **HLR.REQ-18** - The system shall store 1GB of video recordings and 250MB of pictures.
