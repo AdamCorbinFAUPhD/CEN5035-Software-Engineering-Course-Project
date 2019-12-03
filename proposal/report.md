@@ -385,8 +385,8 @@ pass code. Possibly in the future when Watson can self identify someone based on
 feature to add to this Smart Security System
 
 ###  Google Calendar as smart enable system
-The concept of the Smart Security System would to leverage the use of the Google Calendar to know when the system should
-be monitoring for intruders. The system will periodically monitory for calendar updates. It will also activate and
+The concept of the Smart Security System would leverage the use of the Google Calendar to know when the system should
+be monitoring for intruders. The system will periodically monitor for calendar updates. It will also activate and
 deactivate the alarm system based on which events are running.
 
 #### Determining when to monitor
@@ -431,9 +431,18 @@ TODO - Add screenshots of the UI
 TODO - add any considerations we might have
 
 ### Twilio notifications
-TODO - Add details as to why Twilio was choses
-TODO - add details on how it works and how it was integrated into the main system
-TODO - add any considerations
+Twilio is a Cloud Communication Platform as a Service (CPaaS) company that allows developers to send and receive text messages using its web service APIs. We chose Twilio because it is easily integrated into most systems and the Twilio website provides tutorials on how to integrate Twilio into your code.
+To integrate Twilio, we first needed to sign up for a free Twilio account. From there we added the Twilio Communications REST API to a notifications python script. Twilio provides users with an account identification number as well as an authorization token. Once the user verifies the number that will
+receive the messages, the user can configure the fields for sending the messages. Below is the template for sending a message on Twilio:
+client.messages.create(
+    body="body of the messages",
+    from="the number that was chosen on Twilio
+    to="the number the messages is being sent to"
+    )
+
+#### Considerations
+
+Our team also considered using IBM Watson Push Notifications to send notifications in the event of the system being triggered but Twilio was chosen instead for it's ease of use.
 
 ## Class Diagrams
 ### System class
