@@ -330,7 +330,11 @@ distance = time * speed.  We know the time in micro seconds. The speed is the sp
 The LED module is the main localized visual to let the system owner know what the system is doing. This LED will give live feedback in
 the event the user enters the PIN from the keypad acknowledging of a successful entry or a bad entry. This is an RGB led that allows
 for red, green, blue or any combination of the colors to represent status of the system. It was found out that the only combination of colors that was dent was green and red to make yellow.
-TODO add screenshot of led module
+
+![](images/led_module.png)\
+\begin{figure}[!h]
+\caption{HC-SR04 Ultrasonic Distance Sensor}
+\end{figure}
 
 ## Services
 
@@ -427,8 +431,27 @@ TODO - add any considerations
 
 ## Class Diagrams
 ### System class
-TODO add the rest of the class diagrams
-![](images/system.png)
+![](images/class_diagrams/system.png)
+### Sys Client
+![](images/class_diagrams/sys_client.png)
+### LED module
+![](images/class_diagrams/led.png)
+### Keypad
+![](images/class_diagrams/keypad.png)
+### PIR Sensor
+![](images/class_diagrams/pir_sensor.png)
+### PIR Event
+![](images/class_diagrams/pir_event.png)
+### Notifications
+![](images/class_diagrams/notifications.png)
+### Ultrasonic Distance Sensor
+![](images/class_diagrams/ultra_sonic_dist.png)
+### Watson
+![](images/class_diagrams/watson_processing.png)
+### System Integration Testing
+![](images/class_diagrams/system_integration_testing.png)
+### Manual Testing
+![](images/class_diagrams/manual_testing.png)
 
 ## Development Environment setup
 Since our team was made up of people in many different locations we needed a good way to communicate, develop, and test our system. 
