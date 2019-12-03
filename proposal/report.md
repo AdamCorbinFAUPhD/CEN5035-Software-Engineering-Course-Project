@@ -317,8 +317,14 @@ Raspberry Pi to make sure it would get enough current to support driving the PS3
 The HC-SR04 was a late addition to the hardware components but was required due to challenges with the PIR sensor which was highlighted in the PIR Sensor section. The Ultrasonic Sound Distance sensor is an amazing little device that uses sound to measure distance to the 3mm resolution. It can measure distances between 2cm and up to 4m or 13 feet which is perfect for our prototype.
 
 #### How it works
-The Ultrasonic Sound Sensory works by shooting out 40kHz sound from 1 speaker and then listening using the other speaker for the sound to return. Using the speed of sound we can calculate how far an object is from the sensor. There are 4 pins on the device: ground, vcc(5v power), echo, and trigger. In the software the Trigger pin is set to high for 1 microsecond, then we measure the time it takes for the echo pin to go from low to high and back to low. We can calculate the distance with the following formula
-distance = time * speed.  We know the time in micro seconds. The speed is the speed of sound which is 340 m/s. We can then use this formula to calculate the distance in cm: distance = measured_time * 34300/2. We divide by 2 since the distance was down and back.
+The Ultrasonic Sound Sensory works by shooting out 40kHz sound from 1 speaker and then listening using the other speaker for the sound to return. 
+Using the speed of sound we can calculate how far an object is from the sensor. There are 4 pins on the device: ground, 
+vcc(5v power), echo, and trigger. In the software the Trigger pin is set to high for 1 microsecond, then we measure the 
+time it takes for the echo pin to go from low to high and back to low. We can calculate the distance with the following formula:
+$$ distance = time * speed$$
+  We know the time in micro seconds. The speed is the speed of sound which is 340 m/s. We can then use this formula to calculate the distance in cm: 
+$$distance = measured time * 34300/2$$
+We divide by 2 since the distance was down and back.
 
 ![](images/ultra_sonic_sensor.png)\
 \begin{figure}[!h]
