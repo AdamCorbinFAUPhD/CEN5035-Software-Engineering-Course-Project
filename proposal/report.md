@@ -431,25 +431,35 @@ TODO - add any considerations
 
 ## Class Diagrams
 ### System class
-![](images/class_diagrams/system.png)
+![](images/class_diagrams/system.png){ width=40% }
+
 ### Sys Client
-![](images/class_diagrams/sys_client.png)
+![](images/class_diagrams/sys_client.png){ width=40% }
+
 ### LED module
-![](images/class_diagrams/led.png)
+![](images/class_diagrams/led.png){ width=40% }
+
 ### Keypad
 ![](images/class_diagrams/keypad.png)
+
 ### PIR Sensor
 ![](images/class_diagrams/pir_sensor.png)
+
 ### PIR Event
-![](images/class_diagrams/pir_event.png)
+![](images/class_diagrams/pir_event.png){ width=50% }
+
 ### Notifications
 ![](images/class_diagrams/notifications.png)
+
 ### Ultrasonic Distance Sensor
 ![](images/class_diagrams/ultra_sonic_dist.png)
+
 ### Watson
 ![](images/class_diagrams/watson_processing.png)
+
 ### System Integration Testing
 ![](images/class_diagrams/system_integration_testing.png)
+
 ### Manual Testing
 ![](images/class_diagrams/manual_testing.png)
 
@@ -458,20 +468,24 @@ Since our team was made up of people in many different locations we needed a goo
 For our source control and task management, we used GitHub. It was a nice way to organize our work and prioritize what needed to get done.
 In order to use the actual Raspberry Pi remotely there needed to be some channels opened up to allow for file transfer and remote access.
 FTP/SSH was opened up for that purpose and VNC was enabled for remote access to the Raspberry Pi.
+
 ### Tools
 * Filezilla - File transfer system to move files from a local computer to the remote Raspberry Pi
 * Putty or any SSH program - This program is used to tunnel into the terminal of the Raspberry Pi which would be used to run scripts
 * Python file editor like Notepad++ or PyCharm - This is intended to be used to create the python files on your local host. Because some of the scripts need hardware outputs, most might only be able to be tested using the remote Raspberry Pi
 * Real VNC client - This will be used if someone wants to visually see the Raspberry Pi desktop. In most cases this might not be needed but its good to have this option available
+
 ### Port Forwarding on router for SSH 
 In order to get the SSH and FTP working the router need to open up the ports to the outside world. 
 Otherwise the router would just block all requests and it would appear if something isn't working. 
 
 The following ports were opened up:
+
 * Port 22 for SFTP transfers
 * Port 2022 for SSH communications
 * Port 5901 for VNC
 * Port 8081 for camera streaming using motion
+
 ### Work flow to editing and testing out code
 1. Locally clone repo from https://github.com/AdamCorbinFAUPhD/CEN5035-Software-Engineering-Course-Project
 1. Make changes to the files if necessary 
