@@ -623,7 +623,7 @@ an incorrect pin, the yellow light flashes confirming an invalid pin and goes ba
 - **HL.TC-10** - Verify that when the calender event ends, that the system becomes disarmed.
 
 # Team Member Contribution
-1. Adam Corbin: Product Owner
-2. Malia Kency: Individual Contributor
-3. Stincy Dumerjean: Individual Contributor
-4. Jared Peterson: Scrum Master
+1. Adam Corbin: Product Owner - Hardware setup and API to Hardware
+2. Malia Kency: Individual Contributor - Notification lead
+3. Stincy Dumerjean: Individual Contributor - UI lead
+4. Jared Peterson: Scrum Master - System integrator
