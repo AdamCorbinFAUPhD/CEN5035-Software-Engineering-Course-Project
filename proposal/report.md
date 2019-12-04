@@ -92,8 +92,6 @@ was real or not. Our system will be able to notify authorities quickly enough af
 
 
 # Data Definition
-TODO - Consider going back and seeing we need to add anymore definitions. Also probably need to go into a little more detail
- 
 - Enable/arm - Turning the system on to monitor for intruders.
 - Active - Currently the system monitoring for intruders or any disturbance from the motion sensors.
 - Disarm - The act acknowledging the system of a false alarm or making the system inactive meaning that the system is no 
@@ -102,7 +100,7 @@ monitoring for movement.
 - System owner - User in control of the system who can enable/disable the system.
 - Detect - System has found a disturbance from one of the motion sensors.
 - Monitor - the act of checking the sensors to see if the signals are out of normal range.
-- Record - Using the PS3 Eye to captur video and or pictures and save it to the system.
+- Record - Using the PS3 Eye to capture video and or pictures and save it to the system.
 - Sensing - This the period where the system has been Armed and the waiting period has lapsed. During this time
 if there has been activity spotted by the PIR then the alarm will be activated.
 - Locked - The system we become locked upon 4 incorrect pin entries.
@@ -290,7 +288,9 @@ before adding any of the complexity of the Raspberry Pi.
 
 #### Interference
 Late into the project we experienced some weird behaviors where the PIR sensor would keep triggering movement even though there was
-no movement in the room. After some research it looked like it could have been the Raspberry Pi Bluetooth module and/or the WiFi module causing interference. Turning off the Bluetooth module did not help and and we needed to have the WiFi on in order to connect to the internet. That being said we decided to add in another monitoring sensor as a back up which was the Ultrasonic Sound Distance Sensor.
+no movement in the room. After some research it looked like it could have been the Raspberry Pi Bluetooth module and/or 
+the WiFi module causing interference. Turning off the Bluetooth module did not help and and we needed to have the WiFi on 
+in order to connect to the internet. That being said we decided to add in another monitoring sensor as a back up which was the Ultrasonic Sound Distance Sensor.
 
 Source for some of this data: https://www.youtube.com/watch?v=ZC_sEW3_694
 
@@ -332,7 +332,9 @@ Raspberry Pi to make sure it would get enough current to support driving the PS3
 \end{figure}
 
 ### Ultrasonic Sound Distance Sensor(HC-SR04)
-The HC-SR04 was a late addition to the hardware components but was required due to challenges with the PIR sensor which was highlighted in the PIR Sensor section. The Ultrasonic Sound Distance sensor is an amazing little device that uses sound to measure distance to the 3mm resolution. It can measure distances between 2cm and up to 4m or 13 feet which is perfect for our prototype.
+The HC-SR04 was a late addition to the hardware components but was required due to challenges with the PIR sensor which was 
+highlighted in the PIR Sensor section. The Ultrasonic Sound Distance sensor is an amazing little device that uses sound to 
+measure distance to the 3mm resolution. It can measure distances between 2cm and up to 4m or 13 feet which is perfect for our prototype.
 
 #### How it works
 The Ultrasonic Sound Sensory works by shooting out 40kHz sound from 1 speaker and then listening using the other speaker for the sound to return. 
@@ -440,7 +442,10 @@ and can support many different types of cameras. It was not designed specificall
 plugins to help communicate to the cameras. Its intended platform is Linux based and was also intended to be used as a 
 way to monitor multiple cameras. Project website: https://motion-project.github.io/motion_config.html
 
-This library was used to capture images from the PS3 eye and also record video when requested. When viewing the live stream the image will update once a second. Because the Raspberry Pi doesn't have a strong CPU, the stream only updates the image once a second. It is possible to update to have more frames per second but based on the research the Raspberry Pi can get bogged down quickly and we don't want this library to interfere with the main security system.
+This library was used to capture images from the PS3 eye and also record video when requested. When viewing the live 
+stream the image will update once a second. Because the Raspberry Pi doesn't have a strong CPU, the stream only updates 
+the image once a second. It is possible to update to have more frames per second but based on the research the Raspberry 
+Pi can get bogged down quickly and we don't want this library to interfere with the main security system.
 
 ### Flask framework
 
@@ -470,8 +475,13 @@ of the system and the ajax requests allow the web page to change dynamically and
 
 
 ### Twilio notifications
-Twilio is a Cloud Communication Platform as a Service (CPaaS) company that allows developers to send and receive text messages using its web service APIs. We chose Twilio because it is easily integrated into most systems and the Twilio website provides tutorials on how to integrate Twilio into your code.
-To integrate Twilio, we first needed to sign up for a free Twilio account. From there we added the Twilio Communications REST API to a notifications python script. Twilio provides users with an account identification number as well as an authorization token. Once the user verifies the number that will
+Twilio is a Cloud Communication Platform as a Service (CPaaS) company that allows developers to send and receive text 
+messages using its web service APIs. We chose Twilio because it is easily integrated into most systems and the Twilio 
+website provides tutorials on how to integrate Twilio into your code.
+
+To integrate Twilio, we first needed to sign up for a free Twilio account. From there we added the Twilio Communications 
+REST API to a notifications python script. Twilio provides users with an account identification number as well as an 
+authorization token. Once the user verifies the number that will
 receive the messages, the user can configure the fields for sending the messages. Below is the template for sending a message on Twilio:
 client.messages.create(
     body="body of the messages",
@@ -526,7 +536,8 @@ FTP/SSH was opened up for that purpose and VNC was enabled for remote access to 
 ### Tools
 * Filezilla - File transfer system to move files from a local computer to the remote Raspberry Pi
 * Putty or any SSH program - This program is used to tunnel into the terminal of the Raspberry Pi which would be used to run scripts
-* Python file editor like Notepad++ or PyCharm - This is intended to be used to create the python files on your local host. Because some of the scripts need hardware outputs, most might only be able to be tested using the remote Raspberry Pi
+* Python file editor like Notepad++ or PyCharm - This is intended to be used to create the python files on your local host. 
+Because some of the scripts need hardware outputs, most might only be able to be tested using the remote Raspberry Pi
 * Real VNC client - This will be used if someone wants to visually see the Raspberry Pi desktop. In most cases this might not be needed but its good to have this option available
 
 ### Port Forwarding on router for SSH 
