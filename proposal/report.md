@@ -16,7 +16,7 @@ urlcolor: blue
 header-includes: |
     \usepackage{fancyhdr}
     \pagestyle{fancy}
-    \lfoot{27 September 2019}
+    \lfoot{4 December 2019}
     \rfoot{Page \thepage}
 ---
 
