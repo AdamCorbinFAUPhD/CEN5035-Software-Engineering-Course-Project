@@ -4,7 +4,7 @@ subtitle: Group 5 - The Smart Security System
 author: >
     Adam Corbin (acorbin3@fau.edu)
     Malia Kency
-    Stincii Dumerjean
+    Stincy Dumerjean (sdumerje@fau.edu)
     Jared Peterson 
 date: December 2019
 include-before:
@@ -88,17 +88,17 @@ if there has been activity spotted by the PIR then the alarm will be activated.
 
 1. System owner chooses to enable monitoring service
 2. System asks for code to arm monitoring service
-   * System verifies that system owner would like to arm monitoring service
-    * Once verified, system arms monitoring service
-3. System Owner is notified that monitoring service has been armed on user interface
+    * System owner enters correct pin
+    * System will arm and LED indicator will flash 5 times and LED will set to blue
+3. System Owner is notified that monitoring service has been armed on via SMS notification
 
 **Alternate Flow** :
 
 1. System Owner chooses to enable monitoring service
 2. System asks for code to arm monitoring service
-    * Code provided is incorrect, system allows for another try
-    * Code provided is incorrect, system is locked
-3. System Owner must verify identity to unlock system
+    * Code provided is incorrect, system allows for 5 more incorrect tries
+    * Code provided is incorrect, system is locked for 5 minutes
+3. System Owner is notified that system is locked via SMS notification
 
 ** **
 
@@ -110,31 +110,17 @@ if there has been activity spotted by the PIR then the alarm will be activated.
 
 1. System owner chooses to disable monitoring service
 2. System asks for code to disarm monitoring service
-    * System verifies that system owner would like to disarm monitoring service
-    * Once verified, system disarms monitoring service
-3. System Owner is notified that monitoring service has been disarmed on user interface
+    * System owner enters keypress to disarm monitoring service
+    * Once disarmed, LED indicator will flash 5 times and LED will be turned off
+3. System Owner is notified that monitoring service has been disarmed via SMS notification
 
 **Alternate Flow** :
 
 1. System Owner chooses to disable monitoring service
 2. System asks for code to disarm monitoring service
-   * Code provided is incorrect, system allows for another try
-   * Code provided is incorrect, system is locked for 10 minutes
-
-** **
-
-**Use Case: Disable False Alarm**
-
-**Brief Description** : System owner disarms monitoring service after an incident
-
-**Basic Flow** :
-
-1. System owner is notified of possible disturbance
-2. A video/picture is sent to system owner
-   * If disturbance occurs outside of normal range
-      i.  System owner can choose to dispatch authorities
-      ii.  Or system owner can choose to disable alarm
-3. See **Use Case Disable Alarm**
+   * Code provided is incorrect, system allows for 5 incorrect tries
+   * Code provided is incorrect, system is locked for 5 minutes
+3. System Owner is notified that monitoring service has been disarmed via SMS notification
 
 ** **
 
@@ -145,14 +131,12 @@ if there has been activity spotted by the PIR then the alarm will be activated.
 **Basic Flow:**
 
 1. Monitoring service is triggered
-2. Monitoring service takes video/picture of surrounding area
-3. Monitoring service sends an SMS to system owner that the service was triggered
-4. If disturbance occurred outside of range of camera but within range of motion sensor
-    - System owner is given option to dispatch authorities or disable alarm
-    - If user chooses to dispatch authorities
-        i. User then has option to contact authorities
-    - If user chooses to disarm the alarm
-        i. See **Use Case Disable False Alarm**
+2. Monitoring service takes a picture of surrounding perimeter
+3. Monitoring service takes a video of surrounding perimeter
+4. System Owner is notified that an event has occurred
+    * Latest image is sent to system owner via SMS notification
+    * A link to a live stream of the video is sent to system owner via SMS notification
+
         
 # High-Level functional requirements
 ## Detection System
