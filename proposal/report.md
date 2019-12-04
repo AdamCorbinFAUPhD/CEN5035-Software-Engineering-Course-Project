@@ -409,10 +409,16 @@ way to monitor multiple cameras. Project website: https://motion-project.github.
 This library was used to capture images from the PS3 eye and also record video when requested. When viewing the live stream the image will update once a second. Because the Raspberry Pi doesn't have a strong CPU, the stream only updates the image once a second. It is possible to update to have more frames per second but based on the research the Raspberry Pi can get bogged down quickly and we don't want this library to interfere with the main security system.
 
 ### Flask framework
-TODO - Add details as to why Flask was chosen
-TODO - add details how it works & how it interacts with the main system
+
+The Flask web framework was selected by the team due to its ease of use for both constructing web pages and its use of the
+python language for server side execution. While PHP would have also been valid the use of familiar python modules like
+socket and json allowed the team to easily integrate the web page to pull live data from the system itself. As implied by
+the modules above, the web server communicates to the system through a simple socket interface. The client passes a json request
+and if properly formatted the system will execute the function and send back data or a simple confirmation. The web page itself
+utilizes a simple javascript block that leverages ajax requests to call the web server functions which in turn communicates through
+the local socket to the system. This back and fourth gives the web server the ability to perform any actions available to a local user
+of the system and the ajax requests allow the web page to change dynamically and without constantly refreshing in the web browser.
 TODO - Add screenshots of the UI
-TODO - add any considerations we might have
 
 ### Twilio notifications
 Twilio is a Cloud Communication Platform as a Service (CPaaS) company that allows developers to send and receive text messages using its web service APIs. We chose Twilio because it is easily integrated into most systems and the Twilio website provides tutorials on how to integrate Twilio into your code.
